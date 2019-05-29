@@ -11,4 +11,8 @@ class Enderecos extends Model
     public function celulas() {
         return $this->hasMany(Celulas::class, 'id_address', 'id');
     }
+
+    public function pessoas() {
+      return $this->hasMany(Pessoas::class, 'id_address', 'id');
+    }
 }

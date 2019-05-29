@@ -48,7 +48,7 @@
                         <div class="box-body">
                           <div class="form-group">
                             <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" placeholder="Insira um nome" value="{{ celula->name }}" required>
+                            <input type="text" class="form-control" id="nome" placeholder="Insira um nome" value="" required>
                           </div>
                           <!-- /*Carrega parte do formulário de cep*/ -->
                           @include('helpers/form-cep')

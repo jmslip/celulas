@@ -19,6 +19,11 @@ class CelulasController extends Controller
     {
         $this->celulasAtivas();
         $celulas = $this->getCelula();
+        $celulaspessoas = $this->celulasPessoas();
+        foreach ($celulaspessoas as $celula) {
+          echo $celula->pessoas;
+        }
+        dd();
         return view('sidebar.celulas.celulas', compact('celulas'));
     }
 
@@ -91,6 +96,10 @@ class CelulasController extends Controller
     private function celulasAtivas() {
         $celulasAtivas = Celulas::active()->get();
         $this->setCelula($celulasAtivas);
+    }
+
+    private function celulasPessoas() {
+      return Celulas::with('pessoas')->get();
     }
 
     public function getCelula() {

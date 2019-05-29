@@ -19,4 +19,8 @@ class Celulas extends Model
     public function endereco() {
         return $this->belongsTo(Enderecos::class, 'id_address');
     }
+
+    public function pessoas() {
+      return $this->belongsToMany(Pessoas::class, 'peoplexsmallgruops', 'id', 'd_small_group');
+    }
 }
