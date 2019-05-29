@@ -131,7 +131,13 @@
 @stop
 
 @section('adminlte_js')
-    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/select2br.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-datepicker.pt-BR.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/celulas.js') }}"></script>
+
+    </script>
     @stack('js')
     @yield('js')
 @stop

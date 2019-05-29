@@ -11,6 +11,10 @@
 |
 */
 
+Route::group(['midleware' => ['auth'], 'prefix' => 'home'], function () {
+    Route::get('celulas', 'CelulasController@index')->name('celulas');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });

@@ -13,9 +13,9 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 2',
+    'title' => 'Células IRV',
 
-    'title_prefix' => '',
+    'title_prefix' => 'Células IRV - ',
 
     'title_postfix' => '',
 
@@ -30,9 +30,9 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Células</b>IRV',
 
-    'logo_mini' => '<b>A</b>LT',
+    'logo_mini' => '<b>IRV</b>',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'skin' => 'blue',
+    'skin' => 'green',
 
     /*
     |--------------------------------------------------------------------------
@@ -115,11 +115,9 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text'        => 'Celulas',
+            'url'         => 'sidebar/celulas/celulas',
+            'icon'        => 'list'
         ],
         'ACCOUNT SETTINGS',
         [
