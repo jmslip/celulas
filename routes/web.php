@@ -11,7 +11,8 @@
 |
 */
 
-Route::group(['midleware' => ['auth'], 'prefix' => 'home'], function () {
+Route::group(['midleware' => ['auth'], 'prefix' => 'siscell'], function () {
+    Route::get('/', 'HomeController@index')->name('home');
     Route::get('celulas', 'CelulasController@index')->name('celulas');
 });
 
@@ -20,5 +21,3 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
