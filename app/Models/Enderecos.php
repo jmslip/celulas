@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Enderecos extends Model
 {
     protected $table = "addresses";
+    public $timestamps = false;
 
     public function celulas() {
         return $this->hasMany(Celulas::class, 'id_address', 'id');

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Celulas extends Model
 {
     protected $table = "small_groups";
+    public $timestamps = false;
 
     public function scopeActive($query) {
         return $query->where('active', 1);
