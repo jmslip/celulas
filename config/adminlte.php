@@ -116,7 +116,7 @@ return [
         ],
         [
             'text'        => 'Celulas',
-            'url'         => 'sidebar/celulas/celulas',
+            'url'         => 'siscell/celulas',
             'icon'        => 'list'
         ],
         'ACCOUNT SETTINGS',

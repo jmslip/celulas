@@ -7,8 +7,8 @@ use App\Models\Celulas;
 
 class CelulasController extends Controller
 {
-
-    private $celula;
+    private static $tituloCelulasGrid = 'Lista de Células';
+    private $tituloCelulasForm;
 
     /**
      * Display a listing of the resource.
@@ -17,14 +17,9 @@ class CelulasController extends Controller
      */
     public function index()
     {
-        $this->celulasAtivas();
-        $celulas = $this->getCelula();
-        $celulaspessoas = $this->celulasPessoas();
-        foreach ($celulaspessoas as $celula) {
-          echo $celula->pessoas;
-        }
-        dd();
-        return view('sidebar.celulas.celulas', compact('celulas'));
+        $tituloCelulasGrid = self::$tituloCelulasGrid;
+        $celulas = $this->celulasAtivas();
+        return view('sidebar.celulas.celulas', compact('tituloCelulasGrid', 'celulas'));
     }
 
     /**
@@ -83,7 +78,7 @@ class CelulasController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage.$this->
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -94,19 +89,14 @@ class CelulasController extends Controller
     }
 
     private function celulasAtivas() {
-        $celulasAtivas = Celulas::active()->get();
-        $this->setCelula($celulasAtivas);
+        return Celulas::active()->get();
     }
 
-    private function celulasPessoas() {
-      return Celulas::with('pessoas')->get();
+    public function getTituloCelulasForm() {
+      return $this->tituloCelulasForm;
     }
 
-    public function getCelula() {
-        return $this->celula;
-    }
-
-    private function setCelula($celula) {
-        $this->celula = $celula;
+    private function setTituloCelulasForm($tituloCelulasForm) {
+      $this->tituloCelulasForm = $tituloCelulasForm;
     }
 }

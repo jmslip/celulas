@@ -12,7 +12,7 @@
 */
 
 Route::group(['midleware' => ['auth'], 'prefix' => 'siscell'], function () {
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/', 'HomeController@index')->name('siscell');
     Route::get('celulas', 'CelulasController@index')->name('celulas');
 });
 

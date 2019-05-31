@@ -9,7 +9,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    Lista de Células
+                    {{ $tituloCelulasGrid }}
                 </div>
                 <div class="box-body">
                     <table id="lista-celulas" class="table table-bordered table-striped">
@@ -37,6 +37,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="box box-success">
