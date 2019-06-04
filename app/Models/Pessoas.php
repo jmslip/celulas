@@ -9,6 +9,10 @@ class Pessoas extends Model
     protected $table = 'people';
     public $timestamps = false;
 
+    public function scopeActive($query) {
+      return $query->where('active', 1);
+    }
+
     public function endereco()
     {
       return $this->belongsTo(Enderecos::class, 'id_address');
