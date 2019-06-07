@@ -13,13 +13,35 @@ class PessoasTableSeeder extends Seeder
     public function run()
     {
         Pessoas::create([
-          'name' => 'Jorge Marcelo de Souza Junior',
+          'name' => 'Jorge',
+          'lastname' => 'Marcelo de Souza Junior',
           'birthday' => '1987-05-20',
           'cellphone' => '31994773864',
           'email' => 'jms.slip@gmail.com',
           'leader' => true,
           'id_user' => 1,
-          'id_address' => 1
+          'street' => 'Rua Novo Mundo',
+          'number' => 108,
+          'neiborhood' => 'Novo Glória',
+          'city' => 'Belo Horizonte',
+          'state' => 'MG',
+          'cep' => '30880320'
+        ]);
+
+        Pessoas::create([
+          'name' => 'Rúbia',
+          'lastname' => 'Mara de Oliveira Souza',
+          'birthday' => '1987-05-20',
+          'cellphone' => '31994773864',
+          'email' => 'jms.slip@gmail.com',
+          'leader' => true,
+          'id_user' => 1,
+          'street' => 'Rua Novo Mundo',
+          'number' => 108,
+          'neiborhood' => 'Novo Glória',
+          'city' => 'Belo Horizonte',
+          'state' => 'MG',
+          'cep' => '30880320'
         ]);
     }
 }

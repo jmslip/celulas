@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Celulas;
 use App\Models\Pessoas;
-use App\Models\Enderecos;
+use App\Models\PessoasXCelulas;
 
 class CelulasController extends Controller
 {
@@ -45,7 +45,21 @@ class CelulasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (isset($request)) {
+          $celula = new Celulas();
+          $celula->name = $request->input('nome');
+          $celula->description = $request->input('nome');
+          $celula->cep = str_replace('-', '', $request->input('cep'));
+          $celula->street = $request->input('rua');
+          $celula->number = $request->input('numero');
+          $celula->neiborhood = $request->input('bairro');
+          $celula->city = $request->input('cidade');
+          $celula->state = $request->input('estado');
+          $celula->save();
+        }
+        
+
+        return json_encode($celula);
     }
 
     /**
@@ -76,12 +90,9 @@ class CelulasController extends Controller
             }
           }
 
-          //Endereco da celula
-          $enderecoCelula = Enderecos::find($celula->id_address);
-
           $quantidadeLideres['quantidadeLideres'] = $aux;
 
-          $dados_celula = array_merge($celula->toArray(), $enderecoCelula->toArray(), $lideres, $quantidadeLideres);
+          $dados_celula = array_merge($celula->toArray(), $lideres, $quantidadeLideres);
         }
 
         if (isset($dados_celula)) {
@@ -97,11 +108,8 @@ class CelulasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        $celula = Celulas::find($id);
-        if (isset($celula)) {
-            return json_encode($celula);
-        }
+    { 
+      //
     }
 
     /**
@@ -113,7 +121,16 @@ class CelulasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $celula = Celulas::find($id);
+
+        if(isset($celula)) {
+          if ($request->input('name') === null) {
+            $celula->active = 0;
+            $celula->save();
+            return json_encode($celula);
+          }
+        }
+        return response('Célula não encontrada', 404);
     }
 
     /**
@@ -124,15 +141,7 @@ class CelulasController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
-
-    public function editCelula($id) {
-        $d = [
-            'teste1' => 1,
-            'teste' => 2
-        ];
-        return json_encode($d);
+      //
     }
 
     private function celulasAtivas() {

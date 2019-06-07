@@ -15,11 +15,23 @@ class CelulasTableSeeder extends Seeder
         Celulas::create([
           'name' => 'Égide',
           'Description' => 'Célula Égide',
-          'id_address' => 1
-        ], [
+          'street' => 'Rua Novo Mundo',
+          'number' => 41,
+          'neiborhood' => 'Novo Glória',
+          'city' => 'Belo Horizonte',
+          'state' => 'MG',
+          'cep' => '30880320'
+        ]);
+
+        Celulas::create([
           'name' => 'Ágape',
           'description' => 'Célula Ágape',
-          'id_address' => 2
+          'street' => 'Rua João Donada',
+          'number' => 108,
+          'neiborhood' => 'Serrano',
+          'city' => 'Belo Horizonte',
+          'state' => 'MG',
+          'cep' => '30880320'
         ]);
     }
 }

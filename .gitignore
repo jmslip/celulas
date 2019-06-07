@@ -12,3 +12,5 @@ yarn-error.log
 .buildpath
 .project
 .settings/
+.idea/
+.vscode/

@@ -2,12 +2,9 @@
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'siscell'], function () {
     Route::get('/', 'HomeController@index')->name('home'); // Rota para home do app
-    Route::get('/celulas', 'CelulasController@index')->name('celulas');
-    Route::post('celulas/editar-celula/', 'CelulasController@editCelula')->name('celula_edit');
+    Route::resource('/celulas', 'CelulasController');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::permanentRedirect('/', '/siscell');
 
 Auth::routes();

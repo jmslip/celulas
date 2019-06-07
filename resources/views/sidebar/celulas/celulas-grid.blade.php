@@ -19,17 +19,17 @@
                               <tr>
                                   <td>
                                     <button type="button" id="edit" class="btn btn-default" onclick="editarCelula('{{$celula->id}}')"><i class="fa fa-edit"></i></button>
-                                    <button type="button" id="delete" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+                                    <button type="button" id="delete" class="btn btn-danger delete-celula" value="{{$celula->id}}"><i class="fa fa-trash"></i></button>
                                   </td>
                                   <td>{{ $celula->name }}</td>
-                                  <td>{{ $celula->endereco->street }}, {{ $celula->endereco->number }} -
-                                              {{ $celula->endereco->neiborhood }}, {{ $celula->endereco->city }}, {{ $celula->endereco->state }}</td>
+                                  <td>{{ $celula->street }}, {{ $celula->number }} -
+                                              {{ $celula->neiborhood }}, {{ $celula->city }}, {{ $celula->state }}</td>
                                   <td>
                                     @foreach ($celula->pessoas as $key => $lider)
                                       @if ($key < count($celula->pessoas)-1)
-                                        {{ $lider->name }},
+                                        {{ $lider->name }} {{ $lider->lastname }},
                                         @else
-                                          {{ $lider->name }}
+                                          {{ $lider->name }} {{ $lider->lastname }}
                                       @endif
                                     @endforeach
                                   </td>
@@ -52,41 +52,10 @@
 
 @section('js')
   <script type="text/javascript">
-    function editarCelula(id) {
-      $.getJSON('/api/celulas/'+id, function (data) {
-        if (data !== null || data !== undefined) {
-          $('#title-form').text('Editar Célula');
-          $('#btnLimpar').val('cancelar');
-          $('#btnLimpar').text('Cancelar');
-
-          $('#nome').val(data.description);
-          $('#cep').val(data.cep);
-          $('#rua').val(data.street);
-          $('#bairro').val(data.neiborhood);
-          $('#numero').val(data.number);
-          $('#cidade').val(data.city);
-          $('#estado').val(data.state);
-
-          const arr_lideres = [];
-          for (let i = 0; i < data.quantidadeLideres; i++) {
-            arr_lideres.push(data['pessoa-'+i]);
-          }
-          $('#select-lider-celula').val(arr_lideres).trigger('change');
-        } else {
-          console.log('Erro ao tentar encontrar dados');
-        }
-
-      });
+    $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
     }
-
-    $('#btnLimpar').click(function() {
-      let btnValue = $(this).val();
-      if (btnValue === 'cancelar') {
-        $(this).val('limpar');
-        $(this).text('Limpar');
-        $('#title-form').text('Nova Célula');
-        $('#select-lider-celula').val('').trigger('change');
-      }
-    });
+});
   </script>
 @endsection

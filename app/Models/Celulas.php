@@ -17,10 +17,6 @@ class Celulas extends Model
         return $query->where('active', 0);
     }
 
-    public function endereco() {
-        return $this->belongsTo(Enderecos::class, 'id_address');
-    }
-
     public function pessoas() {
       return $this->belongsToMany('App\Models\Pessoas', 'peoplexsmallgroups', 'id_small_group', 'id_people')->withPivot('leader');
     }

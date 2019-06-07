@@ -13,11 +13,6 @@ class Pessoas extends Model
       return $query->where('active', 1);
     }
 
-    public function endereco()
-    {
-      return $this->belongsTo(Enderecos::class, 'id_address');
-    }
-
     public function celulas() {
       return $this->belongsToMany(Celulas::class, 'peoplexsmallgroups', 'id_people', 'id_small_group')->withPivot('leader');
     }
