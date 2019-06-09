@@ -9,7 +9,7 @@
             </div>
             @include('helpers/modal')
             <div class="box-body lista-celulas">
-                <table id="lista-celulas" class="table table-bordered table-hover">
+                <table id="lista-celulas" class="table table-bordered table-hover" data-page-length="1">
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -21,7 +21,7 @@
                           @foreach ($celulas as $celula)
                               <tr>
                                   <input type="hidden" name="id" value="{{ $celula->id  }}">
-                                  <td>{{ $celula->name }}</td>
+                                  <td id="{{ $celula->id }}">{{ $celula->name }}</td>
                                   <td>{{ $celula->street }}, {{ $celula->number }} -
                                               {{ $celula->neiborhood }}, {{ $celula->city }}, {{ $celula->state }}</td>
                                   <td>
@@ -45,7 +45,7 @@
                         </tfoot>
                 </table>
                 <div class="right">
-                    <button type="button" id="edit" class="btn btn-lg btn-default edit-celula" disabled onclick="editarCelula()">Editar</button>
+                    <button type="button" id="edit" class="btn btn-lg btn-default edit-celula" onclick="editarCelula()">Novo</button>
                     <button type="button" id="delete" class="btn btn-lg btn-danger delete-celula" disabled onclick="confirmaExlusao()">Apagar</button>
                 </div>
             </div>

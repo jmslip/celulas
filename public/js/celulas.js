@@ -5,9 +5,6 @@ $('#telefone').mask('(99)9999-9999');
 $('#celular').mask('(99)99999-9999');
 $('#cep').mask('99999-999');
 
-//Função ToDo List
-//$
-
 // //Tornar os widgets móveis
 // $('.connectedSortable').sortable({
 //     placeholder: 'sort-highlight',
@@ -70,57 +67,6 @@ $('#select-lider-celula').select2({
     language: "pt-BR"
 });
 
-
-//DataTable
-const tableCelulas = $('#lista-celulas').DataTable({
-    language: {
-        processing: "Processando informações...",
-        search: "Procurar:",
-        lengthMenu: "Mostrar _MENU_ registros",
-        info: "Monstrando de _START_ a _END_ de _TOTAL_ registros",
-        infoEmpty: "Mostrando de 0 a 0 de 0 registros",
-        infoFiltered: "(Filtrado de _MAX_ resgistros)",
-        infoPostFix: "",
-        loadingRecords: "Carregando informações...",
-        paginate: {
-            first: "Primeiro",
-            previous: "Anterior",
-            next: "Próximo",
-            last: "Último"
-        }
-    },
-    responsive: true,
-    // ajax: {
-    //     "url": "/siscell/grid-celulas",
-    //     "dataSrc": "celulas"
-    // },
-    // columnDefs: [{
-    //     "targets": 0,
-    //     "data": null,
-    //     "defaultContent": "teste"
-    // }],
-    // columns: [
-    //     {"text": "jorge"},
-    //     {data: 'name'},
-    //     {data: 'street'},
-    //     {data: 'pessoas'}
-    // ]
-});
-
-
-$('#lista-celulas tbody').on('click', 'tr', function() {
-    if ($(this).hasClass('success')) {
-        $(this).removeClass('success');
-        $('.edit-celula').prop('disabled', true);
-        $('.delete-celula').prop('disabled', true);
-    } else {
-        tableCelulas.$('tr.success').removeClass('success');
-        $(this).addClass('success');
-        $('.edit-celula').removeAttr('disabled');
-        $('.delete-celula').removeAttr('disabled');
-    }
-});
-
 //Funcoes para Modal
 function cria_modal(title, content, button) {
     var id = '#celula-modal';
@@ -140,21 +86,17 @@ function cria_modal(title, content, button) {
         $('#celula-modal-title').text("");
         $('#celula-modal-content').text("");
         $('.modal-footer').empty();
+        $('#cep').tooltip('hide');
+        nameCelula = null;
     });
 }
 
-//Funcao para liberar campos para preenchimento
-//@params id Array, attr
-function remove_atributos(id, attr) {
-    var i;
-    for (i = 0; i < id.length; i++) {
-        $(id[i]).removeAttr(attr);
-    }
-}
-
 //Funcoes CEP
-
 //Funcoes para cep
+$('#cep').tooltip({
+    trigger: 'manual'
+});
+
 //Funcao para limpar o formulário do cep
 function limpa_formulario_cep() {
     $('#rua').val("");
@@ -195,31 +137,70 @@ $('#cep').blur(function() {
                 } else {
                     //Cep pesquisado não foi encontrado
                     limpa_formulario_cep();
-                    cria_modal("CEP não encontrado", "Desculpe, mas o CEP digitado não foi encontrado na base de dados!", "");
-                    $('#rua').removeAttr('readonly');
-                    var id = ["#rua", "#bairro", "#cidade", "#estado"];
-                    var attr = "readonly";
-                    remove_atributos(id, attr);
+                    $('#cep').tooltip('show');
                 }
             });
         } else {
             //CEP não é válido
             limpa_formulario_cep();
-            cria_modal("CEP inválido", "Favor digitar um cep válido!");
-            var id = ["#rua", "#bairro", "#cidade", "#estado"];
-            var attr = "readonly";
-            remove_atributos(id, attr);
         }
     } else {
         //Campo está vazio
         limpa_formulario_cep();
-        cria_modal("CEP não preenchido", "Favor preencher o cep!");
     }
 });
 
-//Grid de Celulas  
+$('#cep').click(function() {
+    $(this).tooltip('hide');
+});
+
+
+
+//DataTable de células
+//Grid de Celulas
+const tableCelulas = $('#lista-celulas').DataTable({
+    language: {
+        processing: "Processando informações...",
+        search: "Procurar:",
+        lengthMenu: "Mostrar _MENU_ registros",
+        info: "Monstrando de _START_ a _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando de 0 a 0 de 0 registros",
+        infoFiltered: "(Filtrado de _MAX_ resgistros)",
+        infoPostFix: "",
+        loadingRecords: "Carregando informações...",
+        paginate: {
+            first: "Primeiro",
+            previous: "Anterior",
+            next: "Próximo",
+            last: "Último"
+        }
+    },
+    responsive: true
+});
+
+var valueCelula = null;
+var nameCelula = null;
+
+
+$('#lista-celulas tbody').on('click', 'tr', function() {
+    if ($(this).hasClass('success')) {
+        $(this).removeClass('success');
+        $('.edit-celula').text('Novo');
+        $('.delete-celula').prop('disabled', true);
+        valueCelula = null;
+        nameCelula = null;
+    } else {
+        tableCelulas.$('tr.success').removeClass('success');
+        $(this).addClass('success');
+        $('.edit-celula').text('Editar');
+        $('.delete-celula').removeAttr('disabled');
+        valueCelula = $('#lista-celulas tr.success > input').val();
+        nameCelula = $('#lista-celulas tr.success > #'+valueCelula).text();
+    }
+});
+
 function editarCelula() {
-    var idCelula = $('#lista-celulas tr.success > input').val();
+    var idCelula = valueCelula;
     var idModal = $('#form-celula-modal');
 
     $(idModal).modal();
@@ -228,9 +209,7 @@ function editarCelula() {
         if (idCelula != null) {
             $.getJSON('/siscell/celulas/' + idCelula, function (data) {
                 if (data !== null || data !== undefined) {
-                    $('#title-form').text('Editar Célula');
-                    $('#btnLimpar').val('cancelar');
-                    $('#btnLimpar').text('Cancelar');
+                    $('#form-celula-modal-title').text('Editar Célula');
 
                     $('#idCelula').val(data.id);
                     $('#nome').val(data.description);
@@ -251,6 +230,8 @@ function editarCelula() {
                 }
 
             });
+        } else {
+            $('#form-celula-modal-title').text('Nova Célula');
         }
     });
 
@@ -265,8 +246,9 @@ function editarCelula() {
 }
 
 function confirmaExlusao() {
+    let celula = nameCelula;
     let title = "Exclusão de Célula";
-    let content = "ATENÇÃO!!! Confirma exclusão de Célula?"
+    let content = "ATENÇÃO!!! Confirma exclusão da "+ celula +"?";
     let buttons = "<button type='button' class='btn btn-success confirma-delete' data-dismiss='modal' onClick='apagarCelula()'>Confirma</button>\
         <button class='btn btn-danger confirma-delete' data-dismiss='modal' value='cancela'>Cancela</button>";
 
@@ -274,7 +256,7 @@ function confirmaExlusao() {
 };
 
 function apagarCelula() {
-    let id = $('#lista-celulas tr.success > input').val();
+    let id = valueCelula;
 
     $.ajax({
         type: 'PUT',
@@ -284,6 +266,8 @@ function apagarCelula() {
     .done(function (resp) {
         if (resp != null) {
             tableCelulas.row('.success').remove().draw(false);
+            $('.edit-celula').text('Novo');
+            $('.delete-celula').prop('disabled', true);
         }
     })
     .fail(function() {
@@ -322,16 +306,5 @@ $('#form-celula').submit(function(event) {
     
     criarCelula();
 });
-
-// Limpa formulário
-$('#btnLimpar').click(function() {
-    let btnValue = $(this).val();
-    if (btnValue === 'cancelar') {
-      $(this).val('limpar');
-      $(this).text('Limpar');
-      $('#title-form').text('Nova Célula');
-      $('#select-lider-celula').val('').trigger('change');
-    }
-  });
 
   
