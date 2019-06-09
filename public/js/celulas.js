@@ -70,8 +70,9 @@ $('#select-lider-celula').select2({
     language: "pt-BR"
 });
 
+
 //DataTable
-$('#lista-celulas').DataTable({
+const tableCelulas = $('#lista-celulas').DataTable({
     language: {
         processing: "Processando informações...",
         search: "Procurar:",
@@ -88,6 +89,36 @@ $('#lista-celulas').DataTable({
             last: "Último"
         }
     },
+    responsive: true,
+    // ajax: {
+    //     "url": "/siscell/grid-celulas",
+    //     "dataSrc": "celulas"
+    // },
+    // columnDefs: [{
+    //     "targets": 0,
+    //     "data": null,
+    //     "defaultContent": "teste"
+    // }],
+    // columns: [
+    //     {"text": "jorge"},
+    //     {data: 'name'},
+    //     {data: 'street'},
+    //     {data: 'pessoas'}
+    // ]
+});
+
+
+$('#lista-celulas tbody').on('click', 'tr', function() {
+    if ($(this).hasClass('success')) {
+        $(this).removeClass('success');
+        $('.edit-celula').prop('disabled', true);
+        $('.delete-celula').prop('disabled', true);
+    } else {
+        tableCelulas.$('tr.success').removeClass('success');
+        $(this).addClass('success');
+        $('.edit-celula').removeAttr('disabled');
+        $('.delete-celula').removeAttr('disabled');
+    }
 });
 
 //Funcoes para Modal
@@ -187,45 +218,63 @@ $('#cep').blur(function() {
 });
 
 //Grid de Celulas  
-function editarCelula(id) {
-    $.getJSON('/siscell/celulas/'+id, function (data) {
-        if (data !== null || data !== undefined) {
-        $('#title-form').text('Editar Célula');
-        $('#btnLimpar').val('cancelar');
-        $('#btnLimpar').text('Cancelar');
+function editarCelula() {
+    var idCelula = $('#lista-celulas tr.success > input').val();
+    var idModal = $('#form-celula-modal');
 
-        $('#nome').val(data.description);
-        $('#cep').val(data.cep);
-        $('#rua').val(data.street);
-        $('#bairro').val(data.neiborhood);
-        $('#numero').val(data.number);
-        $('#cidade').val(data.city);
-        $('#estado').val(data.state);
+    $(idModal).modal();
 
-        const arr_lideres = [];
-        for (let i = 0; i < data.quantidadeLideres; i++) {
-            arr_lideres.push(data['pessoa-'+i]);
+    $(idModal).on('shown.bs.modal', function() {
+        if (idCelula != null) {
+            $.getJSON('/siscell/celulas/' + idCelula, function (data) {
+                if (data !== null || data !== undefined) {
+                    $('#title-form').text('Editar Célula');
+                    $('#btnLimpar').val('cancelar');
+                    $('#btnLimpar').text('Cancelar');
+
+                    $('#idCelula').val(data.id);
+                    $('#nome').val(data.description);
+                    $('#cep').val(data.cep);
+                    $('#rua').val(data.street);
+                    $('#bairro').val(data.neiborhood);
+                    $('#numero').val(data.number);
+                    $('#cidade').val(data.city);
+                    $('#estado').val(data.state);
+
+                    const arr_lideres = [];
+                    for (let i = 0; i < data.quantidadeLideres; i++) {
+                        arr_lideres.push(data['pessoa-' + i]);
+                    }
+                    $('#select-lider-celula').val(arr_lideres).trigger('change');
+                } else {
+                    console.log('Erro ao tentar encontrar dados');
+                }
+
+            });
         }
-            $('#select-lider-celula').val(arr_lideres).trigger('change');
-        } else {
-            console.log('Erro ao tentar encontrar dados');
-        }
+    });
 
+    $(idModal).on('hidden.bs.modal', function() {
+        $('#form-celula').each(function () {
+            this.reset();
+        });
+        $('#idCelula').val('');
+        $('#select-lider-celula').val('').trigger('change');
+        idCelula = null;
     });
 }
 
-$('.delete-celula').click(function (event) {
-    var id = event.currentTarget.value;
-    
-    var title = "Exclusão de Célula";
-    var content = "ATENÇÃO!!! Confirma exclusão de Célula?" 
-    var buttons = "<button type='button' class='btn btn-success confirma-delete' data-dismiss='modal' onClick='apagarCelula("+id+")'>Confirma</button>\
+function confirmaExlusao() {
+    let title = "Exclusão de Célula";
+    let content = "ATENÇÃO!!! Confirma exclusão de Célula?"
+    let buttons = "<button type='button' class='btn btn-success confirma-delete' data-dismiss='modal' onClick='apagarCelula()'>Confirma</button>\
         <button class='btn btn-danger confirma-delete' data-dismiss='modal' value='cancela'>Cancela</button>";
 
     cria_modal(title, content, buttons);
-});
+};
 
-function apagarCelula(id) {
+function apagarCelula() {
+    let id = $('#lista-celulas tr.success > input').val();
 
     $.ajax({
         type: 'PUT',
@@ -233,8 +282,9 @@ function apagarCelula(id) {
         context: this
     })
     .done(function (resp) {
-        console.log(resp);
-        $('#lista-celulas').load(' #lista-celulas');
+        if (resp != null) {
+            tableCelulas.row('.success').remove().draw(false);
+        }
     })
     .fail(function() {
         console.log('Celula não encontrada');
@@ -243,6 +293,7 @@ function apagarCelula(id) {
 
 function criarCelula() {
     celula = {
+        idCelula: $('#idCelula').val(),
         nome: $('#nome').val(),
         cep: $('#cep').val(),
         rua: $('#rua').val(),
@@ -254,7 +305,14 @@ function criarCelula() {
     };
     
     $.post("/siscell/celulas", celula, function(data) {
-        console.log(data);
+        if (data != null) {
+            $('#form-celula').each(function() {
+                this.reset();
+            });
+            $('#select-lider-celula :selected').val("");
+            location.reload();
+        }
+        $('#form-celula-modal').modal('hide');
     });
 }
 
@@ -275,4 +333,5 @@ $('#btnLimpar').click(function() {
       $('#select-lider-celula').val('').trigger('change');
     }
   });
+
   

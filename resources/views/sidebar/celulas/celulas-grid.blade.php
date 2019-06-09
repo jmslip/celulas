@@ -1,14 +1,17 @@
+<style>
+    tr {font-size: larger;}
+</style>
 <div class="row">
     <div class="col-md-12 col-lg-12">
         <div class="box box-success">
             <div class="box-header with-border">
                 {{ $tituloCelulasGrid }}
             </div>
-            <div class="box-body">
-                <table id="lista-celulas" class="table table-bordered table-striped">
+            @include('helpers/modal')
+            <div class="box-body lista-celulas">
+                <table id="lista-celulas" class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Ação</th>
                                 <th>Nome</th>
                                 <th>Endereço</th>
                                 <th>Líder</th>
@@ -17,10 +20,7 @@
                         <tbody>
                           @foreach ($celulas as $celula)
                               <tr>
-                                  <td>
-                                    <button type="button" id="edit" class="btn btn-default" onclick="editarCelula('{{$celula->id}}')"><i class="fa fa-edit"></i></button>
-                                    <button type="button" id="delete" class="btn btn-danger delete-celula" value="{{$celula->id}}"><i class="fa fa-trash"></i></button>
-                                  </td>
+                                  <input type="hidden" name="id" value="{{ $celula->id  }}">
                                   <td>{{ $celula->name }}</td>
                                   <td>{{ $celula->street }}, {{ $celula->number }} -
                                               {{ $celula->neiborhood }}, {{ $celula->city }}, {{ $celula->state }}</td>
@@ -38,13 +38,16 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Ação</th>
                                 <th>Nome</th>
                                 <th>Endereço</th>
                                 <th>Líder</th>
                             </tr>
                         </tfoot>
                 </table>
+                <div class="right">
+                    <button type="button" id="edit" class="btn btn-lg btn-default edit-celula" disabled onclick="editarCelula()">Editar</button>
+                    <button type="button" id="delete" class="btn btn-lg btn-danger delete-celula" disabled onclick="confirmaExlusao()">Apagar</button>
+                </div>
             </div>
         </div>
     </div>

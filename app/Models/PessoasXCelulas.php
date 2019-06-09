@@ -8,4 +8,8 @@ class PessoasXCelulas extends Model
 {
     protected $table = "peoplexsmallgroups";
     public $timestamps = false;
+
+    public function findPessoasXCelulasByPessoaAndCelula($idPeople, $idSmallGroup) {
+
+    }
 }
