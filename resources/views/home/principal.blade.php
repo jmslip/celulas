@@ -1,2 +1,2 @@
-@include('home/cards');
-@include('home/widgets');
+@include('home/cards')
+@include('home/widgets')

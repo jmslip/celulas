@@ -7,5 +7,5 @@
 @stop
 
 @section('content')
-    @include('home/principal');
+    @include('home/principal')
 @stop

@@ -9,7 +9,6 @@ use App\Models\Pessoas;
 class CelulasController extends Controller
 {
     private static $tituloCelulasGrid = 'Lista de Células';
-    private static $tituloCelulasForm = 'Nova Célula';
     private $error404 = 'Célula não encontrada';
 
     /**
@@ -20,7 +19,6 @@ class CelulasController extends Controller
     public function index()
     {
         $tituloCelulasGrid = self::$tituloCelulasGrid;
-        $tituloCelulasForm = self::$tituloCelulasForm;
         $celulas = $this->celulasAtivas();
         $lideres = $this->lideresAtivos();
         return view('sidebar.celulas.celulas', compact('tituloCelulasGrid', 'tituloCelulasForm', 'celulas', 'lideres'));
@@ -212,14 +210,10 @@ class CelulasController extends Controller
         }
     }
 
-    public function getTituloCelulasForm()
-    {
-        return $this->tituloCelulasForm;
-    }
+    public function getNumberCelulas() {
+        $celulas  = Celulas::active()->count();
 
-    private function setTituloCelulasForm($tituloCelulasForm)
-    {
-        $this->tituloCelulasForm = $tituloCelulasForm;
+        return json_encode($celulas);
     }
 
     public function getError404()

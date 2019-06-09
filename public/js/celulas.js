@@ -1,3 +1,25 @@
+// Pagina principal
+//Cards
+//Celulas
+$.ajax({
+    url: '/siscell/qtCelulas',
+    method: 'GET',
+    type: 'json'
+}).done(function(resp) {
+    $('#qtCelulas').text(resp);
+}).fail(function() {
+    $('#qtCelulas').text('0');
+});
+//Participantes
+$.ajax({
+    url: '/siscell/qtParticipantes',
+    method: 'GET',
+    type: 'json'
+}).done(function(resp) {
+    $('#qtParticipantes').text(resp);
+}).fail(function() {
+    $('#qtParticipantes').text('0');
+});
 
 //Mascaras
 $('#calendario').mask('dd/mm/yyyy');
