@@ -9,7 +9,7 @@
             </div>
             @include('helpers/modal')
             <div class="box-body lista-celulas">
-                <table id="lista-celulas" class="table table-bordered table-hover" data-page-length="1">
+                <table id="lista-celulas" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>Nome</th>
