@@ -12,13 +12,13 @@ $.ajax({
 });
 //Participantes
 $.ajax({
-    url: '/siscell/qtParticipantes',
+    url: '/siscell/qtMembros',
     method: 'GET',
     type: 'json'
 }).done(function(resp) {
-    $('#qtParticipantes').text(resp);
+    $('#qtMembros').text(resp);
 }).fail(function() {
-    $('#qtParticipantes').text('0');
+    $('#qtMembros').text('0');
 });
 
 //Mascaras
@@ -180,7 +180,7 @@ $('#cep').click(function() {
 
 //DataTable de células
 //Grid de Celulas
-const tableCelulas = $('#lista-celulas').DataTable({
+const tableSiscell = $('#siscell-list').DataTable({
     language: {
         processing: "Processando informações...",
         search: "Procurar:",
@@ -200,29 +200,29 @@ const tableCelulas = $('#lista-celulas').DataTable({
     responsive: true
 });
 
-var valueCelula = null;
-var nameCelula = null;
+var valueTable = null;
+var nameTable = null;
 
 
-$('#lista-celulas tbody').on('click', 'tr', function() {
+$('#siscell-list tbody').on('click', 'tr', function() {
     if ($(this).hasClass('success')) {
         $(this).removeClass('success');
-        $('.edit-celula').text('Novo');
-        $('.delete-celula').prop('disabled', true);
-        valueCelula = null;
-        nameCelula = null;
+        $('.siscell-edit').text('Novo');
+        $('.siscell-delete').prop('disabled', true);
+        valueTable = null;
+        nameTable = null;
     } else {
-        tableCelulas.$('tr.success').removeClass('success');
+        tableSiscell.$('tr.success').removeClass('success');
         $(this).addClass('success');
-        $('.edit-celula').text('Editar');
-        $('.delete-celula').removeAttr('disabled');
-        valueCelula = $('#lista-celulas tr.success > input').val();
-        nameCelula = $('#lista-celulas tr.success > #'+valueCelula).text();
+        $('.siscell-edit').text('Editar');
+        $('.siscell-delete').removeAttr('disabled');
+        valueTable = $('#siscell-list tr.success > input').val();
+        nameTable = $('#siscell-list tr.success > #'+valueTable).text();
     }
 });
 
 function editarCelula() {
-    var idCelula = valueCelula;
+    var idCelula = valueTable;
     var idModal = $('#form-celula-modal');
 
     $(idModal).modal();
@@ -267,33 +267,33 @@ function editarCelula() {
     });
 }
 
-function confirmaExlusao() {
-    let celula = nameCelula;
-    let title = "Exclusão de Célula";
-    let content = "ATENÇÃO!!! Confirma exclusão da "+ celula +"?";
-    let buttons = "<button type='button' class='btn btn-success confirma-delete' data-dismiss='modal' onClick='apagarCelula()'>Confirma</button>\
+function confirmaExlusao(url) {
+    let item = nameTable;
+    let title = "EXCLUIR";
+    let content = "ATENÇÃO!!! Confirma exclusão? "+ item;
+    let buttons = "<button type='button' class='btn btn-success confirma-delete' data-dismiss='modal' onClick='apagarItem(\""+url+"\")'>Confirma</button>\
         <button class='btn btn-danger confirma-delete' data-dismiss='modal' value='cancela'>Cancela</button>";
 
     cria_modal(title, content, buttons);
 };
 
-function apagarCelula() {
-    let id = valueCelula;
+function apagarItem(url) {
+    let id = valueTable;
 
     $.ajax({
         type: 'PUT',
-        url: "/siscell/celulas/"+id,
+        url: url+id,
         context: this
     })
     .done(function (resp) {
         if (resp != null) {
-            tableCelulas.row('.success').remove().draw(false);
-            $('.edit-celula').text('Novo');
-            $('.delete-celula').prop('disabled', true);
+            tableSiscell.row('.success').remove().draw(false);
+            $('.siscell-edit').text('Novo');
+            $('.siscell-delete').prop('disabled', true);
         }
     })
     .fail(function() {
-        console.log('Celula não encontrada');
+        console.log('Item não encontrada');
     });
 }
 

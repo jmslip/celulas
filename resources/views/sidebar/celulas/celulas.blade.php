@@ -6,5 +6,6 @@
 
 @section('content')
     @include('/sidebar/celulas/celulas-grid')
+    @include('layouts/grid')
     @include('sidebar/celulas/celulas-form')
 @stop

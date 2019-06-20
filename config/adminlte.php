@@ -117,12 +117,12 @@ return [
         [
             'text'        => 'Celulas',
             'url'         => 'siscell/celulas',
-            'icon'        => 'users'
+            'icon'        => 'dashboard'
         ],
         [
-            'text'  => 'Participantes',
-            'url'   => 'siscell/participantes',
-            'icon'  => 'user'
+            'text'  => 'Membros',
+            'url'   => 'siscell/membros',
+            'icon'  => 'users'
         ]
     ],
 

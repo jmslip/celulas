@@ -3,10 +3,14 @@
 use \Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'siscell'], function () {
-    Route::get('/', 'HomeController@index')->name('home'); // Rota para home do app
+    // Rota home
+    Route::get('/', 'HomeController@index')->name('home');
+    //Rotas para Celulas
     Route::resource('/celulas', 'CelulasController');
     Route::get('/qtCelulas', 'CelulasController@getNumberCelulas');
-    Route::get('qtParticipantes', 'PessoasController@qtPessoas');
+    //Rotas para pessoas
+    Route::resource('/membros', 'PessoasController');
+    Route::get('qtMembros', 'PessoasController@getQuantidadeMembros');
 });
 
 Route::permanentRedirect('/', '/siscell');

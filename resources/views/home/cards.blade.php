@@ -1,14 +1,17 @@
+<style>
+    .bg-green-celula {background: #008283; color: #E9EDF2}
+</style>
 <div class="row">
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
-        <div class="small-box bg-green">
+        <div class="small-box bg-green-celula">
             <div class="inner">
                 <h3 id="qtCelulas">0</h3>
 
                 <p>Células</p>
             </div>
             <div class="icon">
-                <i class="ion ion-ios-people"></i>
+                <i class="fa fa-home"></i>
             </div>
             <a href="/siscell/celulas" class="small-box-footer">Acessar <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -17,12 +20,12 @@
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner">
-                <h3 id="qtParticipantes">0</h3>
+                <h3 id="qtMembros">0</h3>
 
-                <p>Participantes</p>
+                <p>Membros</p>
             </div>
             <div class="icon">
-                <i class="ion ion-android-contact"></i>
+                <i class="fa fa-users"></i>
             </div>
             <a href="#" class="small-box-footer">Acessar <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -36,7 +39,7 @@
                 <p>Ministrações</p>
             </div>
             <div class="icon">
-                <i class="ion ion-android-mail"></i>
+                <i class="fa fa-envelope"></i>
             </div>
             <a href="#" class="small-box-footer">Acessar <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -50,7 +53,7 @@
                 <p>Relatório</p>
             </div>
             <div class="icon">
-                <i class="ion ion-android-document"></i>
+                <i class="fa fa-files-o"></i>
             </div>
             <a href="#" class="small-box-footer">Acessar <i class="fa fa-arrow-circle-right"></i></a>
         </div>

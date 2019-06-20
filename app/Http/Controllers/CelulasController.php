@@ -2,52 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\Siscell;
 use Illuminate\Http\Request;
 use App\Models\Celulas;
 use App\Models\Pessoas;
 
 class CelulasController extends Controller
 {
-    private static $tituloCelulasGrid = 'Lista de Células';
+    private $view = 'sidebar.celulas.celulas';
     private $error404 = 'Célula não encontrada';
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $tituloCelulasGrid = self::$tituloCelulasGrid;
+        $infosGrid = $this->infosGrid();
         $celulas = $this->celulasAtivas();
         $lideres = $this->lideresAtivos();
-        return view('sidebar.celulas.celulas', compact('tituloCelulasGrid', 'tituloCelulasForm', 'celulas', 'lideres'));
+        return view($this->view, compact('celulas', 'lideres', 'infosGrid'));
     }
 
-    public function grid() {
-        $celulas = $this->celulasAtivas();
-
-        $jsonCelulas['celulas'] = $celulas;
-
-        return json_encode($jsonCelulas);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $celula = null;
@@ -90,12 +68,6 @@ class CelulasController extends Controller
         return json_encode($celula);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         if (!empty($id)) {
@@ -134,24 +106,6 @@ class CelulasController extends Controller
         return response($this->getError404(), 404);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $celula = Celulas::find($id);
@@ -166,30 +120,25 @@ class CelulasController extends Controller
         return response('Célula não encontrada', 404);
     }
 
-    /**
-     * Remove the specified resource from storage.$this->
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     private function celulasAtivas()
     {
         return Celulas::with(['pessoas' => function($query) {
             $query->where([
                 ['peoplexsmallgroups.leader', true],
-                ['peoplexsmallgroups.active', 1]
+                ['peoplexsmallgroups.active', true]
             ]);
         }])->active()->get();
     }
 
     private function lideresAtivos()
     {
-        return Pessoas::active()->where('leader', 1)->get();
+        return Pessoas::leftJoin('peoplexsmallgroups', 'people.id', '=', 'peoplexsmallgroups.id_people')
+            ->where([
+                ['people.leader', true],
+                ['people.active', true]
+            ])->groupBy('people.id', 'people.name', 'people.lastname')
+            ->havingRaw('COUNT(peoplexsmallgroups.id) < ?', [1])
+            ->get(['people.id', 'people.name', 'people.lastname']);
     }
 
     private function savePessoasXCelulas($idPessoas, $celula, $update = false)
@@ -219,5 +168,20 @@ class CelulasController extends Controller
     public function getError404()
     {
         return $this->error404;
+    }
+
+    private function infosGrid() {
+        $title = 'Lista de Células';
+        $headers = [
+            'Nome',
+            'Endereço',
+            'Líderes'
+        ];
+        $url = '/siscell/celulas/';
+        $fnEditar = 'editarCelula()';
+
+        $utilsController = new UtilsController($title, $headers, $url, $fnEditar);
+
+        return $utilsController->getInfosGrid();
     }
 }

@@ -14,6 +14,6 @@ class Pessoas extends Model
     }
 
     public function celulas() {
-      return $this->belongsToMany(Celulas::class, 'peoplexsmallgroups', 'id_people', 'id_small_group')->withPivot('leader');
+      return $this->belongsToMany(Celulas::class, 'peoplexsmallgroups', 'id_people', 'id_small_group')->withPivot('leader', 'active');
     }
 }
