@@ -82,6 +82,23 @@ class PessoasController extends Controller
         //
     }
 
+    public function getLideresAtivos() {
+        return json_encode(Pessoas::active()->where('leader', true)->get(['id', 'name', 'lastname']));
+    }
+
+    public function getLideresCelulasAtivos() {
+        return Pessoas::leftJoin('peoplexsmallgroups', function($join) {
+            $join->on('people.id', '=', 'peoplexsmallgroups.id_people')
+                ->where('peoplexsmallgroups.active', true);
+        })
+                        ->where([
+                            ['people.leader', true],
+                            ['people.active', true]
+                        ])->groupBy('people.id', 'people.name', 'people.lastname')
+                        ->havingRaw('COUNT(peoplexsmallgroups.id) < ?', [1])
+                        ->get(['people.id', 'people.name', 'people.lastname']);
+    }
+
     public function getQuantidadeMembros() {
         $membros = Pessoas::active()->count();
 

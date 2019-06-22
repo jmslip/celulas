@@ -5,21 +5,22 @@ namespace App\Http\Controllers;
 use App\Interfaces\Siscell;
 use Illuminate\Http\Request;
 use App\Models\Celulas;
-use App\Models\Pessoas;
 
 class CelulasController extends Controller
 {
     private $view = 'sidebar.celulas.celulas';
     private $error404 = 'Célula não encontrada';
-
+    private $lideres;
 
     public function index()
     {
-        $infosGrid = $this->infosGrid();
-        $celulas = $this->celulasAtivas();
-        $lideres = $this->lideresAtivos();
-        return view($this->view, compact('celulas', 'lideres', 'infosGrid'));
+        $this->setLideres(array());
+        return view($this->view)->with([
+            'celulas' => $this->celulasAtivas(),
+            'lideres' => $this->getLideres(),
+            'infosGrid' => $this->infosGrid()]);
     }
+
 
     public function create()
     {
@@ -50,9 +51,7 @@ class CelulasController extends Controller
                 $celula->state = $request->input('estado');
                 $celula->save();
 
-                if ($request->input('lideres') !== null) {
-                    $updCelula = $this->savePessoasXCelulas($request->input('lideres'), $celula, $update);
-                }
+                $updCelula = $this->savePessoasXCelulas($request, $celula, $update);
 
                 if (is_null($updCelula)) {
                     return json_encode($celula);
@@ -71,33 +70,18 @@ class CelulasController extends Controller
     public function show($id)
     {
         if (!empty($id)) {
-            // Celula
-            $celula = Celulas::find($id);
-
-            //Lideres
-            $lideresCelula = Celulas::with(['pessoas' => function($query) {
+            //Celulas e Lideres
+            $celulasLideres = Celulas::with(['pessoas' => function($query) {
                 $query->where([
                     ['peoplexsmallgroups.leader', true],
                     ['peoplexsmallgroups.active', 1]
                 ]);
-            }])->where('id', $celula->id)->get();
-            $lideres = array();
-            $aux = 0;
-            foreach ($lideresCelula[0]->pessoas as $lider) {
-                $arrLider = Pessoas::find($lider->id);
+            }])->where('id', $id)->get();
 
-                if (!empty($arrLider)) {
-                    $arrLider = $arrLider->toArray();
-                    $idLider = $arrLider['id'];
-                    $dicionarioArray = 'pessoa-' . $aux;
-                    $lideres[$dicionarioArray] = $idLider;
-                    $aux++;
-                }
-            }
+            $pessoasController = new PessoasController();
+            $lideres = $pessoasController->getLideresCelulasAtivos();
 
-            $quantidadeLideres['quantidadeLideres'] = $aux;
-
-            $dados_celula = array_merge($celula->toArray(), $lideres, $quantidadeLideres);
+            $dados_celula = array_merge($celulasLideres->toArray(), $lideres->toArray());
         }
 
         if (isset($dados_celula)) {
@@ -130,32 +114,30 @@ class CelulasController extends Controller
         }])->active()->get();
     }
 
-    private function lideresAtivos()
-    {
-        return Pessoas::leftJoin('peoplexsmallgroups', 'people.id', '=', 'peoplexsmallgroups.id_people')
-            ->where([
-                ['people.leader', true],
-                ['people.active', true]
-            ])->groupBy('people.id', 'people.name', 'people.lastname')
-            ->havingRaw('COUNT(peoplexsmallgroups.id) < ?', [1])
-            ->get(['people.id', 'people.name', 'people.lastname']);
-    }
-
-    private function savePessoasXCelulas($idPessoas, $celula, $update = false)
+    private function savePessoasXCelulas($request, $celula, $update = false)
     {
         $arrIdPessoas = array();
+        $idPessoas = $request->input('lideres');
 
-        //Apaga todos os lideres da célula
-        $celula->pessoas()->wherePivot('leader', true)->detach();
+        $lideres = $celula->pessoas()->wherePivot('leader', true);
 
-        try {
-            foreach ($idPessoas as $idPessoa) {
-                $arrIdPessoas[$idPessoa] = ['leader' => true];
+        if (empty($request->input('lideres'))) {
+            if ($lideres->count() >= 1) {
+                $lideres->detach();
             }
-            $celula->pessoas()->attach($arrIdPessoas);
-            return $celula;
-        } catch (Throwable $throwable) {
-            return $throwable;
+        } else {
+            //Apaga todos os lideres da célula
+            $celula->pessoas()->wherePivot('leader', true)->detach();
+    
+            try {
+                foreach ($idPessoas as $idPessoa) {
+                    $arrIdPessoas[$idPessoa] = ['leader' => true];
+                }
+                $celula->pessoas()->attach($arrIdPessoas);
+                return $celula;
+            } catch (Throwable $throwable) {
+                return $throwable;
+            }
         }
     }
 
@@ -183,5 +165,15 @@ class CelulasController extends Controller
         $utilsController = new UtilsController($title, $headers, $url, $fnEditar);
 
         return $utilsController->getInfosGrid();
+    }
+
+    public function getLideres()
+    {
+        return $this->lideres;
+    }
+
+    public function setLideres($lideres): void
+    {
+        $this->lideres = $lideres;
     }
 }

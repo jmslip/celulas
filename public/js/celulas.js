@@ -222,31 +222,40 @@ $('#siscell-list tbody').on('click', 'tr', function() {
 });
 
 function editarCelula() {
-    var idCelula = valueTable;
     var idModal = $('#form-celula-modal');
-
+    
     $(idModal).modal();
-
+    
     $(idModal).on('shown.bs.modal', function() {
+        let idCelula = $('#siscell-list tr.success > input').val();
         if (idCelula != null) {
             $.getJSON('/siscell/celulas/' + idCelula, function (data) {
                 if (data !== null || data !== undefined) {
                     $('#form-celula-modal-title').text('Editar Célula');
 
-                    $('#idCelula').val(data.id);
-                    $('#nome').val(data.description);
-                    $('#cep').val(data.cep);
-                    $('#rua').val(data.street);
-                    $('#bairro').val(data.neiborhood);
-                    $('#numero').val(data.number);
-                    $('#cidade').val(data.city);
-                    $('#estado').val(data.state);
-
-                    const arr_lideres = [];
-                    for (let i = 0; i < data.quantidadeLideres; i++) {
-                        arr_lideres.push(data['pessoa-' + i]);
+                    $('#idCelula').val(data[0].id);
+                    $('#nome').val(data[0].description);
+                    $('#cep').val(data[0].cep);
+                    $('#rua').val(data[0].street);
+                    $('#bairro').val(data[0].neiborhood);
+                    $('#numero').val(data[0].number);
+                    $('#cidade').val(data[0].city);
+                    $('#estado').val(data[0].state);
+                    
+                    $('#select-lider-celula').empty();
+                    if (!($.isEmptyObject(data[0].pessoas))) {
+                        fillSelectLeader(data[0].pessoas, true);
                     }
-                    $('#select-lider-celula').val(arr_lideres).trigger('change');
+
+                    let namePessoa = null;
+                    let newOption = null;
+                    for(let i = 1; i < data.length; i++) {
+                        if (!($('#select-lider-celula').find("option[value='" + data[i].id + "']").length)) {
+                            namePessoa = data[i].name + ' ' + data[i].lastname;
+                            newOption = new Option(namePessoa, data[i].id, false, false);
+                            $('#select-lider-celula').append(newOption).trigger('change');
+                        }
+                    }
                 } else {
                     console.log('Erro ao tentar encontrar dados');
                 }
@@ -254,6 +263,10 @@ function editarCelula() {
             });
         } else {
             $('#form-celula-modal-title').text('Nova Célula');
+            $('#select-lider-celula').empty();
+            $.getJSON('/siscell/lideres', function(data) {
+                fillSelectLeader(data, false); 
+            });
         }
     });
 
@@ -263,12 +276,27 @@ function editarCelula() {
         });
         $('#idCelula').val('');
         $('#select-lider-celula').val('').trigger('change');
-        idCelula = null;
+        $('#select-lider-celula').empty();
     });
 }
 
+function fillSelectLeader(data, edit) {
+    let lideresCelula = new Array();
+    data.forEach(function(pessoa) {
+        let namePessoa = pessoa.name + ' ' + pessoa.lastname;
+        let newOption = new Option(namePessoa, pessoa.id, false, false);
+        $('#select-lider-celula').append(newOption).trigger('change');
+        lideresCelula.push(pessoa.id);
+    });
+
+    if (edit) {
+        // Seleciona líderes somente se for edição
+        $('#select-lider-celula').val(lideresCelula).trigger('change');
+    }
+}
+
 function confirmaExlusao(url) {
-    let item = nameTable;
+    let item = $('#siscell-list tr.success > #'+valueTable).text();
     let title = "EXCLUIR";
     let content = "ATENÇÃO!!! Confirma exclusão? "+ item;
     let buttons = "<button type='button' class='btn btn-success confirma-delete' data-dismiss='modal' onClick='apagarItem(\""+url+"\")'>Confirma</button>\
