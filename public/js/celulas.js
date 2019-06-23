@@ -89,12 +89,16 @@ $('#select-lider-celula').select2({
     language: "pt-BR"
 });
 
+$('#select-celula').select2();
+
 //Funcoes para Modal
 function cria_modal(title, content, button) {
     var id = '#celula-modal';
 
     //Chama o modal
-    $(id).modal();
+    $(id).modal({
+        backdrop: false
+    });
 
     //Prenche o modal
     $(id).on('shown.bs.modal', function() {
@@ -221,10 +225,25 @@ $('#siscell-list tbody').on('click', 'tr', function() {
     }
 });
 
-function editarCelula() {
+function editModal(modal) {
     var idModal = $('#form-celula-modal');
+
+    $(idModal).modal({
+        backdrop: 'static'
+    });
+
+    if (modal === 'celula') {
+        editarCelula(idModal);
+    } else if (modal === 'membro') {
+        editarMembro(idModal);
+    }
+}
+
+function editarMembro(idModal) {
     
-    $(idModal).modal();
+}
+
+function editarCelula(idModal) {
     
     $(idModal).on('shown.bs.modal', function() {
         let idCelula = $('#siscell-list tr.success > input').val();
@@ -281,6 +300,7 @@ function editarCelula() {
 }
 
 function fillSelectLeader(data, edit) {
+    $('#select-lider-celula').empty();
     let lideresCelula = new Array();
     data.forEach(function(pessoa) {
         let namePessoa = pessoa.name + ' ' + pessoa.lastname;

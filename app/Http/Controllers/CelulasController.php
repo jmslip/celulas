@@ -98,13 +98,14 @@ class CelulasController extends Controller
             if ($request->input('name') === null) {
                 $celula->active = 0;
                 $celula->save();
+                $this->savePessoasXCelulas($request, $celula);
                 return json_encode($celula);
             }
         }
         return response('Célula não encontrada', 404);
     }
 
-    private function celulasAtivas()
+    public function celulasAtivas()
     {
         return Celulas::with(['pessoas' => function($query) {
             $query->where([
@@ -160,7 +161,7 @@ class CelulasController extends Controller
             'Líderes'
         ];
         $url = '/siscell/celulas/';
-        $fnEditar = 'editarCelula()';
+        $fnEditar = 'celula';
 
         $utilsController = new UtilsController($title, $headers, $url, $fnEditar);
 

@@ -9,7 +9,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'siscell'], function () {
     Route::resource('/celulas', 'CelulasController');
     Route::get('/qtCelulas', 'CelulasController@getNumberCelulas');
     //Rotas para pessoas
-    Route::get('/lideres', 'PessoasController@getLideresAtivos');
+    Route::get('/lideres', 'PessoasController@getLideresCelulasAtivos');
     Route::resource('/membros', 'PessoasController');
     Route::get('qtMembros', 'PessoasController@getQuantidadeMembros');
 });

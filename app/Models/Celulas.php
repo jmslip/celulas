@@ -18,6 +18,6 @@ class Celulas extends Model
     }
 
     public function pessoas() {
-      return $this->belongsToMany('App\Models\Pessoas', 'peoplexsmallgroups', 'id_small_group', 'id_people')->withPivot('leader');
+      return $this->belongsToMany('App\Models\Pessoas', 'peoplexsmallgroups', 'id_small_group', 'id_people')->withPivot('leader', 'active', 'id');
     }
 }

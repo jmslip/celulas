@@ -11,9 +11,13 @@ class PessoasController extends Controller
 
     public function index()
     {
-        $infosGrid = $this->infosGrid();
-        $membros = $this->getMembrosAtivos();
-        return view($this->view, compact('membros', 'infosGrid'));
+        $celulasController = new CelulasController();
+
+        return view($this->view)->with([
+            'membros'   => $this->getMembrosAtivos(),
+            'infosGrid' => $this->infosGrid(),
+            'celulas'   => $celulasController->celulasAtivas()
+        ]);
     }
 
     /**
@@ -68,7 +72,16 @@ class PessoasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $people = Pessoas::find($id);
+
+        if (isset($people)) {
+            if(empty($request->input('name'))) {
+                $people->active = 0;
+                $people->save();
+                return json_decode($people);
+            }
+        }
+        return json_decode('Membro não encontrada');
     }
 
     /**
@@ -124,7 +137,7 @@ class PessoasController extends Controller
             'Célula'
         ];
         $url = '/siscell/membros/';
-        $fnEditar = 'editarMembro()';
+        $fnEditar = 'membro';
 
         $utilsController = new UtilsController($title, $headers, $url, $fnEditar);
 
