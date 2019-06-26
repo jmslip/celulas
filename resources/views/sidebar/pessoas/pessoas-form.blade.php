@@ -1,3 +1,6 @@
+<style>
+    .div {padding-top: 3%}
+</style>
 @section('siscell-form-group-up')
     <div class="row">
         <div class="col-md-6 col-lg-6">
@@ -10,7 +13,7 @@
             <input type="text" class="form-control" id="sobrenome" value="" placeholder="Insira um sobrenome" required>
         </div>
     </div>
-    <div class="row" style="padding-top: 3%">
+    <div class="row div">
         <div class="col-md-6 col-lg-6">
             <label for="dtnascimento">Data de Nascimento</label>
             <input type="date" class="form-control" id="dtnascimento" value="">
@@ -23,6 +26,22 @@
                     <option value="{{ $celula->id }}">{{ $celula->description }}</option>
                 @endforeach
             </select>
+        </div>
+    </div>
+    <div class="row div">
+        <div class="col-md-6 col-lg-6">
+            <label for="telefone">Telefone fixo:</label>
+            <input type="text" class="form-control" name="telefone" id="telefone" value="" placeholder="(XX)XXXX-XXXX">
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <label for="celular">Celular:</label>
+            <input type="text" class="form-control" name="celular" id="celular" value="" placeholder="(XX)XXXXX-XXXX">
+        </div>
+    </div>
+    <div class="row div">
+        <div class="col-md-12 col-lg-12">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Insira o e-mail">
         </div>
     </div>
 @endsection

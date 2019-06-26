@@ -240,54 +240,98 @@ function editModal(modal) {
 }
 
 function editarMembro(idModal) {
-    
+    let idMembro = $('#siscell-list tr.success > input').val();
+    if (idMembro != null) {
+        $('#form-celula-modal-title').text('Editar Membro');
+        $.getJSON('/siscell/membros/' + idMembro, function (data) {
+            if (data !== null || data !== undefined) {
+
+                let celulaId = null;
+                if (data[0].celulas !== null) {
+                    if (data[0].celulas.length > 0) {
+                        celulaId = data[0].celulas[0].id;
+                    }
+                }
+
+                $('#idMembro').val(data[0].id);
+                $('#nome').val(data[0].name);
+                $('#sobrenome').val(data[0].lastname);
+                $('#dtnascimento').val(data[0].birthday);
+                $('#telefone').val(data[0].phone);
+                $('#celular').val(data[0].cellphone);
+                $('#email').val(data[0].email);
+                $('#cep').val(data[0].cep);
+                $('#rua').val(data[0].street);
+                $('#bairro').val(data[0].neiborhood);
+                $('#numero').val(data[0].number);
+                $('#cidade').val(data[0].city);
+                $('#estado').val(data[0].state);
+                if (celulaId !== null && celulaId !== undefined) {
+                    $('#select-celula').val(celulaId).trigger('change');
+                }
+
+                if (data[0].leader == 1) {
+                    $('#lider').prop('checked', true);
+                } else {
+                    $('#lider').prop('checked', false);
+                }
+            } else {
+                console.log('Erro ao tentar recuparar informações dos membros');
+            }
+        });
+    } else {
+        $('#form-celula-modal-title').text('Novo Membro');
+    }
+
+    $(idModal).on('hidden.bs.modal', function() {
+        $('#lider').prop('checked', false);
+        $('#select-celula').val('').trigger('change');
+    });
 }
 
 function editarCelula(idModal) {
-    
-    $(idModal).on('shown.bs.modal', function() {
-        let idCelula = $('#siscell-list tr.success > input').val();
-        if (idCelula != null) {
-            $.getJSON('/siscell/celulas/' + idCelula, function (data) {
-                if (data !== null || data !== undefined) {
-                    $('#form-celula-modal-title').text('Editar Célula');
 
-                    $('#idCelula').val(data[0].id);
-                    $('#nome').val(data[0].description);
-                    $('#cep').val(data[0].cep);
-                    $('#rua').val(data[0].street);
-                    $('#bairro').val(data[0].neiborhood);
-                    $('#numero').val(data[0].number);
-                    $('#cidade').val(data[0].city);
-                    $('#estado').val(data[0].state);
-                    
-                    $('#select-lider-celula').empty();
-                    if (!($.isEmptyObject(data[0].pessoas))) {
-                        fillSelectLeader(data[0].pessoas, true);
-                    }
+    let idCelula = $('#siscell-list tr.success > input').val();
+    if (idCelula != null) {
+        $('#form-celula-modal-title').text('Editar Célula');
+        $.getJSON('/siscell/celulas/' + idCelula, function (data) {
+            if (data !== null || data !== undefined) {
 
-                    let namePessoa = null;
-                    let newOption = null;
-                    for(let i = 1; i < data.length; i++) {
-                        if (!($('#select-lider-celula').find("option[value='" + data[i].id + "']").length)) {
-                            namePessoa = data[i].name + ' ' + data[i].lastname;
-                            newOption = new Option(namePessoa, data[i].id, false, false);
-                            $('#select-lider-celula').append(newOption).trigger('change');
-                        }
-                    }
-                } else {
-                    console.log('Erro ao tentar encontrar dados');
+                $('#idCelula').val(data[0].id);
+                $('#nome').val(data[0].description);
+                $('#cep').val(data[0].cep);
+                $('#rua').val(data[0].street);
+                $('#bairro').val(data[0].neiborhood);
+                $('#numero').val(data[0].number);
+                $('#cidade').val(data[0].city);
+                $('#estado').val(data[0].state);
+
+                $('#select-lider-celula').empty();
+                if (!($.isEmptyObject(data[0].pessoas))) {
+                    fillSelectLeader(data[0].pessoas, true);
                 }
 
-            });
-        } else {
-            $('#form-celula-modal-title').text('Nova Célula');
-            $('#select-lider-celula').empty();
-            $.getJSON('/siscell/lideres', function(data) {
-                fillSelectLeader(data, false); 
-            });
-        }
-    });
+                let namePessoa = null;
+                let newOption = null;
+                for(let i = 1; i < data.length; i++) {
+                    if (!($('#select-lider-celula').find("option[value='" + data[i].id + "']").length)) {
+                        namePessoa = data[i].name + ' ' + data[i].lastname;
+                        newOption = new Option(namePessoa, data[i].id, false, false);
+                        $('#select-lider-celula').append(newOption).trigger('change');
+                    }
+                }
+            } else {
+                console.log('Erro ao tentar encontrar dados');
+            }
+
+        });
+    } else {
+        $('#form-celula-modal-title').text('Nova Célula');
+        $('#select-lider-celula').empty();
+        $.getJSON('/siscell/lideres', function(data) {
+            fillSelectLeader(data, false);
+        });
+    }
 
     $(idModal).on('hidden.bs.modal', function() {
         $('#form-celula').each(function () {

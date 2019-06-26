@@ -49,7 +49,23 @@ class PessoasController extends Controller
      */
     public function show($id)
     {
-        //
+        if (!empty($id)) {
+            try {
+                $people = Pessoas::with(['celulas' => function($query) {
+                    $query->where([
+                        ['peoplexsmallgroups.active', true]
+                    ]);
+                }])->active()
+                ->where('id', $id)
+                ->get();
+
+                if (isset($people)) {
+                    return json_encode($people->toArray());
+                }
+            } catch (\Throwable $tr) {
+                return json_encode($tr);
+            }
+        }
     }
 
     /**
