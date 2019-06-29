@@ -20,33 +20,47 @@ class PessoasController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $pessoa = null;
+        $update = false;
+
+        if (isset($request)) {
+            if (!empty($request->input('idMembro'))) {
+                $pessoa = Pessoas::find($request->input('idMembro'));
+                $update = true;
+            } else {
+                $pessoa = new Pessoas();
+            }
+
+            $pessoa->name = $request->input('nome');
+            $pessoa->lastname = $request->input('sobrenome');
+            $pessoa->leader = $request->input('lider') ? 1 : 0;
+            $pessoa->birthday = $request->input('dtNascimento');;
+            $pessoa->phone = $request->input('telefone');
+            $pessoa->cellphone = $request->input('celular');
+            $pessoa->cep = str_replace('-', '', $request->input('cep'));
+            $pessoa->street = $request->input('rua');
+            $pessoa->number = $request->input('numero');
+            $pessoa->neiborhood = $request->input('bairro');
+            $pessoa->city = $request->input('cidade');
+            $pessoa->state = $request->input('estado');
+            $pessoa->save();
+
+            if (!empty($request->input('celula')) && $request->input('celula') != 0) {
+                if (!$update) {
+                    $pessoa->celulas()->attach($request->input('celula'));
+                } else {
+                    $pessoa->celulas()->detach();
+                    $pessoa->celulas()->attach($request->input('celula'));
+                }
+            } else {
+                $pessoa->celulas()->detach();
+            }
+
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         if (!empty($id)) {
@@ -68,24 +82,6 @@ class PessoasController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $people = Pessoas::find($id);
@@ -94,21 +90,10 @@ class PessoasController extends Controller
             if(empty($request->input('name'))) {
                 $people->active = 0;
                 $people->save();
-                return json_decode($people);
+                return json_encode($people);
             }
         }
-        return json_decode('Membro não encontrada');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response('Membro não encontrado', 404);
     }
 
     public function getLideresAtivos() {

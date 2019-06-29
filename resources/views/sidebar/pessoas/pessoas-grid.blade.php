@@ -2,7 +2,7 @@
     @foreach($membros as $membro)
         <tr>
             <input type="hidden" name="id" value="{{ $membro->id }}">
-            <td>{{ $membro->name }}</td>
+            <td id="{{ $membro->id }}">{{ $membro->name }}</td>
             <td>{{ $membro->lastname }}</td>
             <td>{{ $membro->street }}, {{ $membro->number }} - {{ $membro->neiborhood }}, {{ $membro->city }}, {{ $membro->state }}</td>
             <td>{{ date('d/m/Y', strtotime($membro->birthday)) }}</td>

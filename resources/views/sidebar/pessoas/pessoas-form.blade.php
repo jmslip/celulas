@@ -21,7 +21,7 @@
         <div class="col-md-6 col-lg-6">
             <label for="celula">Célula</label>
             <select class="form-control select2" data-placeholder="Selecione a célula" id="select-celula" style="width: 100%;">
-                <option value="" selected="true" disabled="disabled">Selecione...</option>
+                <option value="0" selected="true">Selecione...</option>
                 @foreach($celulas as $celula)
                     <option value="{{ $celula->id }}">{{ $celula->description }}</option>
                 @endforeach

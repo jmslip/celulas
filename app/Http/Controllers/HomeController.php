@@ -21,8 +21,13 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(CelulasController $celulasController, PessoasController $pessoasController)
     {
-        return view('home');
+        $qtMembros = $pessoasController->getQuantidadeMembros();
+        $qtCelulas = $celulasController->getNumberCelulas();
+        return view('home')->with([
+            'qtMembros' => $qtMembros,
+            'qtCelulas' => $qtCelulas
+        ]);
     }
 }

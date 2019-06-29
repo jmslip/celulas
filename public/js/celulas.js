@@ -1,26 +1,3 @@
-// Pagina principal
-//Cards
-//Celulas
-$.ajax({
-    url: '/siscell/qtCelulas',
-    method: 'GET',
-    type: 'json'
-}).done(function(resp) {
-    $('#qtCelulas').text(resp);
-}).fail(function() {
-    $('#qtCelulas').text('0');
-});
-//Participantes
-$.ajax({
-    url: '/siscell/qtMembros',
-    method: 'GET',
-    type: 'json'
-}).done(function(resp) {
-    $('#qtMembros').text(resp);
-}).fail(function() {
-    $('#qtMembros').text('0');
-});
-
 //Mascaras
 $('#calendario').mask('dd/mm/yyyy');
 $('#telefone').mask('(99)9999-9999');
@@ -414,11 +391,46 @@ function criarCelula() {
     });
 }
 
+function criarMembro() {
+    membro = {
+        idMembro: $('#idMembro').val(),
+        nome: $('#nome').val(),
+        sobrenome: $('#sobrenome').val(),
+        dtNascimento: $('#dtnascimento').val(),
+        telefone: $('#telefone').val(),
+        celular: $('#celular').val(),
+        email: $('#email').val(),
+        lider: $('#lider').is(':checked'),
+        cep: $('#cep').val(),
+        rua: $('#rua').val(),
+        numero: $('#numero').val(),
+        bairro: $('#bairro').val(),
+        cidade: $('#cidade').val(),
+        estado: $('#estado').val(),
+        celula: $('#select-celula :selected').val()
+    };
+
+    $.post("/siscell/membros", membro, function(data) {
+        if (data != null) {
+            $('#form-celula').each(function() {
+                this.reset();
+            });
+            $('#select-celula :selected').val("");
+            location.reload();
+        }
+        $('#form-celula-modal').modal('hide');
+    });
+}
+
 //Formulário de celulas
 $('#form-celula').submit(function(event) {
     event.preventDefault();
-    
-    criarCelula();
+    if (event.target.idCelula !== undefined) {
+        criarCelula();
+    } else if (event.target.idMembro !== undefined) {
+        criarMembro();
+    }
+
 });
 
   
