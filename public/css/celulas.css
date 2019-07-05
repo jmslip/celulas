@@ -1,0 +1,37 @@
+/*
+ * Skin: Celulas
+ * -----------
+ */
+ .skin-green .main-header .navbar {
+    background-color: #008283 !important;
+  }
+  
+  .skin-green .main-header .navbar .sidebar-toggle:hover {
+    background-color: #008283 !important;
+  }
+  
+  @media (max-width: 767px) {
+    .skin-green .main-header .navbar .dropdown-menu li a:hover {
+      background: #008283 !important;
+    }
+  }
+  
+  .skin-green .main-header .logo {
+    background-color: #008283 !important;
+  }
+  
+  .skin-green .main-header .logo:hover {
+    background-color: #008283 !important;
+  }
+  
+  .skin-green .main-header li.user-header {
+    background-color: #008283 !important;
+  }
+  
+  .skin-green .sidebar-menu > li.active > a {
+    border-left-color: #008283 !important;
+  }
+  
+  .box.box-success {
+      border-top-color: #008283 !important;
+  }

@@ -1,5 +1,5 @@
 @section('siscell-body')
-    @foreach($membros as $membro)
+    @foreach($dados as $membro)
         <tr>
             <input type="hidden" name="id" value="{{ $membro->id }}">
             <td id="{{ $membro->id }}">{{ $membro->name }}</td>

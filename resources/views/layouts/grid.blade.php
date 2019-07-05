@@ -1,6 +1,7 @@
 <style>
     tr {font-size: larger;}
-</style>
+    td {cursor: pointer;}
+    </style>
 <div class="row">
     <div class="col-md-12 col-lg-12">
         <div class="box box-success">
@@ -18,7 +19,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @yield('siscell-body')
+                        @if (count($dados) > 0)
+                            @yield('siscell-body')
+                        @else
+                            <tr>
+                                <td colspan="3" style="text-align: center; text-transform: uppercase">Dados não disponíveis</td>
+                            </tr>
+                        @endif
                     </tbody>
                     <tfoot>
                     <tr>

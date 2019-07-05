@@ -39,9 +39,9 @@
                 <p>Ministrações</p>
             </div>
             <div class="icon">
-                <i class="fa fa-envelope"></i>
+                <i class="fa fa-book"></i>
             </div>
-            <a href="#" class="small-box-footer">Acessar <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="/siscell/ministracoes" class="small-box-footer">Acessar <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">

@@ -12,6 +12,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'siscell'], function () {
     Route::get('/lideres', 'PessoasController@getLideresCelulasAtivos');
     Route::resource('/membros', 'PessoasController');
     Route::get('qtMembros', 'PessoasController@getQuantidadeMembros');
+    //Rotas para ministrações
+    Route::resource('/ministracoes', 'MinistracoesController');
 });
 
 Route::permanentRedirect('/', '/siscell');

@@ -1,8 +1,4 @@
-@extends('adminlte::page')
-
-@section('content_header')
-    <h1>Membros Cadastrados</h1>
-@stop
+@extends('layouts/principal')
 
 @section('content')
     @include('sidebar/pessoas/pessoas-grid')

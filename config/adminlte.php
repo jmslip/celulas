@@ -123,6 +123,11 @@ return [
             'text'  => 'Membros',
             'url'   => 'siscell/membros',
             'icon'  => 'users'
+        ],
+        [
+            'text'  => 'Ministrações',
+            'url'   => 'siscell/ministracoes',
+            'icon'  => 'book'
         ]
     ],
 

@@ -8,6 +8,7 @@ use App\Models\Celulas;
 
 class CelulasController extends Controller
 {
+    private $title = 'Células';
     private $view = 'sidebar.celulas.celulas';
     private $error404 = 'Célula não encontrada';
     private $lideres;
@@ -16,9 +17,11 @@ class CelulasController extends Controller
     {
         $this->setLideres(array());
         return view($this->view)->with([
-            'celulas' => $this->celulasAtivas(),
+            'dados' => $this->celulasAtivas(),
             'lideres' => $this->getLideres(),
-            'infosGrid' => $this->infosGrid()]);
+            'infosGrid' => $this->infosGrid(),
+            'title'     => $this->title
+            ]);
     }
 
 

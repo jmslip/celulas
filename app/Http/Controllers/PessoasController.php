@@ -7,6 +7,7 @@ use App\Models\Pessoas;
 
 class PessoasController extends Controller
 {
+    private $title = 'Membros';
     private $view = 'sidebar.pessoas.pessoas';
 
     public function index()
@@ -14,9 +15,10 @@ class PessoasController extends Controller
         $celulasController = new CelulasController();
 
         return view($this->view)->with([
-            'membros'   => $this->getMembrosAtivos(),
+            'dados'   => $this->getMembrosAtivos(),
             'infosGrid' => $this->infosGrid(),
-            'celulas'   => $celulasController->celulasAtivas()
+            'celulas'   => $celulasController->celulasAtivas(),
+            'title'     => $this->title
         ]);
     }
 

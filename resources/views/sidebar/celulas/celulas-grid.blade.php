@@ -1,5 +1,5 @@
 @section('siscell-body')
-      @foreach ($celulas as $celula)
+      @foreach ($dados as $celula)
           <tr>
               <input type="hidden" name="id" value="{{ $celula->id  }}">
               <td id="{{ $celula->id }}">{{ $celula->name }}</td>

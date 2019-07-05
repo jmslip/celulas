@@ -135,10 +135,6 @@
     <script type="text/javascript" src="{{ asset('js/select2br.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/bootstrap-datepicker.pt-BR.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js"></script>
-    <script type="text/javascript" src="{{ asset('js/celulas.js') }}"></script>
-
-    </script>
     @stack('js')
     @yield('js')
 @stop
