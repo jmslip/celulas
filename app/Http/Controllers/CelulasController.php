@@ -12,6 +12,7 @@ class CelulasController extends Controller
     private $view = 'sidebar.celulas.celulas';
     private $error404 = 'Célula não encontrada';
     private $lideres;
+    private $isModalCEP = true;
 
     public function index()
     {
@@ -20,7 +21,8 @@ class CelulasController extends Controller
             'dados' => $this->celulasAtivas(),
             'lideres' => $this->getLideres(),
             'infosGrid' => $this->infosGrid(),
-            'title'     => $this->title
+            'title'     => $this->title,
+            'isModalCEP'  => $this->isModalCEP
             ]);
     }
 

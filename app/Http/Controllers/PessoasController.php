@@ -9,6 +9,7 @@ class PessoasController extends Controller
 {
     private $title = 'Membros';
     private $view = 'sidebar.pessoas.pessoas';
+    private $isModalCEP = true;
 
     public function index()
     {
@@ -18,7 +19,8 @@ class PessoasController extends Controller
             'dados'   => $this->getMembrosAtivos(),
             'infosGrid' => $this->infosGrid(),
             'celulas'   => $celulasController->celulasAtivas(),
-            'title'     => $this->title
+            'title'     => $this->title,
+            'isModalCEP'  => $this->isModalCEP
         ]);
     }
 

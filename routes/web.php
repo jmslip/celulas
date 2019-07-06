@@ -17,5 +17,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'siscell'], function () {
 });
 
 Route::permanentRedirect('/', '/siscell');
+Route::permanentRedirect('/home', '/siscell');
 
 Auth::routes();

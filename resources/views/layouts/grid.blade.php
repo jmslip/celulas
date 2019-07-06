@@ -19,13 +19,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @if (count($dados) > 0)
-                            @yield('siscell-body')
-                        @else
-                            <tr>
-                                <td colspan="3" style="text-align: center; text-transform: uppercase">Dados não disponíveis</td>
-                            </tr>
-                        @endif
+                        @yield('siscell-body')
                     </tbody>
                     <tfoot>
                     <tr>

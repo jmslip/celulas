@@ -157,7 +157,15 @@ $('#cep').click(function() {
     $(this).tooltip('hide');
 });
 
+$('#anexar').click(function() {
+    if ($(this).prop('checked')) {
+        $('#fministracao').show();
+    } else {
+        $('#fministracao').hide();
+    }
+});
 
+$('#fministracao').hide();
 
 //DataTable de células
 //Grid de Celulas
@@ -165,6 +173,7 @@ const tableSiscell = $('#siscell-list').DataTable({
     language: {
         processing: "Processando informações...",
         search: "Procurar:",
+        emptyTable: "DADOS INDISPONÍVEIS",
         lengthMenu: "Mostrar _MENU_ registros",
         info: "Monstrando de _START_ a _END_ de _TOTAL_ registros",
         infoEmpty: "Mostrando de 0 a 0 de 0 registros",
@@ -186,19 +195,23 @@ var nameTable = null;
 
 
 $('#siscell-list tbody').on('click', 'tr', function() {
-    if ($(this).hasClass('success')) {
-        $(this).removeClass('success');
-        $('.siscell-edit').text('Novo');
-        $('.siscell-delete').prop('disabled', true);
-        valueTable = null;
-        nameTable = null;
-    } else {
-        tableSiscell.$('tr.success').removeClass('success');
-        $(this).addClass('success');
-        $('.siscell-edit').text('Editar');
-        $('.siscell-delete').removeAttr('disabled');
-        valueTable = $('#siscell-list tr.success > input').val();
-        nameTable = $('#siscell-list tr.success > #'+valueTable).text();
+    let id = $('#siscell-list tr > input').val();
+
+    if (id !== undefined) {
+        if ($(this).hasClass('success')) {
+            $(this).removeClass('success');
+            $('.siscell-edit').text('Novo');
+            $('.siscell-delete').prop('disabled', true);
+            valueTable = null;
+            nameTable = null;
+        } else {
+            tableSiscell.$('tr.success').removeClass('success');
+            $(this).addClass('success');
+            $('.siscell-edit').text('Editar');
+            $('.siscell-delete').removeAttr('disabled');
+            valueTable = $('#siscell-list tr.success > input').val();
+            nameTable = $('#siscell-list tr.success > #'+valueTable).text();
+        }
     }
 });
 
@@ -213,7 +226,26 @@ function editModal(modal) {
         editarCelula(idModal);
     } else if (modal === 'membro') {
         editarMembro(idModal);
+    } else if (modal === 'ministracoes') {
+        editarMinistracoes(idModal);
     }
+}
+
+function editarMinistracoes(idModal) {
+    let idMinistracao = $('#siscell-list tr.success > input').val();
+    if (idMinistracao != null) {
+
+    } else {
+        $('#form-celula-modal-title').text('Nova Ministração');
+    }
+
+    $(idModal).on('hidden.bs.modal', function() {
+        $('#form-celula').each(function () {
+            this.reset();
+        });
+        $('#idMinistracoes').val('');
+        $('#fministracao').hide();
+    });
 }
 
 function editarMembro(idModal) {
@@ -422,6 +454,10 @@ function criarMembro() {
     });
 }
 
+function criarMinistracao() {
+    let formData = new FormData(this)
+}
+
 //Formulário de celulas
 $('#form-celula').submit(function(event) {
     event.preventDefault();
@@ -429,6 +465,26 @@ $('#form-celula').submit(function(event) {
         criarCelula();
     } else if (event.target.idMembro !== undefined) {
         criarMembro();
+    } else if (event.target.idMinistracao !== undefined) {
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: '/siscell/ministracoes',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function() {
+                var myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload) {
+                    myXhr.upload.addEventListener('progress', function() {
+
+                    }, false);
+                }
+                return myXhr;
+            }
+        });
     }
 
 });

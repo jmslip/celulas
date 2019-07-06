@@ -86,4 +86,14 @@ class UtilsController
     {
         $this->fnEditar = $fnEditar;
     }
+
+    public function sysdate($format = 'd/m/y', $strTimezone = 'America/Sao_Paulo') {
+        //Define SYSDATE
+        date_default_timezone_set($strTimezone);
+        //$timezone = new DateTimeZone($strTimezone);
+        $date = new DateTime();
+        //$date->setTimezone($timezone);
+        $sysdate = $date->format($format);
+        return $sysdate;
+    }
 }

@@ -1,4 +1,7 @@
 @extends('adminlte::page')
+@push('css')
+    <link rel="stylesheet" href="/css/celulas.css">
+@endpush
 
 @section('title', 'home')
 

@@ -7,13 +7,15 @@
             </div>
             <div class="modal-body" id="celula-modal-content">
                 <div class="box-body form-celula">
-                    <form role="form" id="form-celula">
+                    <form role="form" id="form-celula" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 @yield('siscell-form-group-up')
                             </div>
-                            <!-- /*Carrega parte do formulário de cep*/ -->
-                            @include('helpers/form-cep')
+                            @if ($isModalCEP)
+                                <!-- /*Carrega parte do formulário de cep*/ -->
+                                @include('helpers/form-cep')                                
+                            @endif
                             @yield('siscell-form-group-down')
                         </div>
                         <!-- /.box-body -->

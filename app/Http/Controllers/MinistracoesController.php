@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Ministracoes;
 
 class MinistracoesController extends Controller
 {
     private $title = "Ministrações";
     private $view = "sidebar.ministracoes.ministracoes";
+    private $isModalCEP = false;
 
     public function index()
     {
@@ -15,7 +17,8 @@ class MinistracoesController extends Controller
         return view($this->view)->with([
             'title' => $this->title,
             'infosGrid' => $this->infosGrid(),
-            'dados' => $ministracoes
+            'dados' => $ministracoes,
+            'isModalCEP'    => $this->isModalCEP
         ]);
     }
 
@@ -37,7 +40,30 @@ class MinistracoesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ministracao = null;
+        $update = false;
+
+        if (isset($request)) {
+            if (!empty($request->input('idMinstracao'))) {
+                $ministracao = Ministracoes::find($request->input('idMinistracao'));
+                $update = true;
+            } else {
+                $ministracao = new Ministracoes();
+            }
+
+            $anexar = $request->input('anexar') ? 1 : 0;
+
+            $ministracao->name = $request->input('nome');
+            $ministracao->description = $request->input('ministracao');
+            $ministracao->attachment = $anexar;
+            $ministracao->number = $request->input('numeroMinistracao');
+            $ministracao->save();
+            
+            if ($anexar == 1) {
+                $filesController = new FilesController();
+                $filesController->anexaArquivo($request, $ministracao);
+            }
+        }
     }
 
     /**
