@@ -1,162 +1,3 @@
-//Mascaras
-$('#calendario').mask('dd/mm/yyyy');
-$('#telefone').mask('(99)9999-9999');
-$('#celular').mask('(99)99999-9999');
-$('#cep').mask('99999-999');
-
-// //Tornar os widgets móveis
-// $('.connectedSortable').sortable({
-//     placeholder: 'sort-highlight',
-//     connectWith: '.connectedSortable',
-//     handle: '.box-header',
-//     forcePlaceholderSize: true,
-//     zIndex: 99999
-// });
-// $('.connectedSortable .box-header').css('cursor', 'move');
-
-// //Gráfico
-// var gCellCanvas = $('#graphCell');
-// var gCell = new Chart(gCellCanvas, {
-//     type: 'bar',
-//     data: {
-//         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-//         datasets: [{
-//             label: '# of Votes',
-//             data: [12, 19, 3, 5, 2, 3],
-//             backgroundColor: [
-//                 'rgba(255, 99, 132, 0.2)',
-//                 'rgba(54, 162, 235, 0.2)',
-//                 'rgba(255, 206, 86, 0.2)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//             borderColor: [
-//                 'rgba(255,99,132,1)',
-//                 'rgba(54, 162, 235, 1)',
-//                 'rgba(255, 206, 86, 1)',
-//                 'rgba(75, 192, 192, 1)',
-//                 'rgba(153, 102, 255, 1)',
-//                 'rgba(255, 159, 64, 1)'
-//             ],
-//             borderWidth: 1
-//         }]
-//     },
-//     options: {
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     beginAtZero:true
-//                 }
-//             }]
-//         }
-//     }
-// });
-
-//Calendário
-$('#calendario').datepicker({
-    format: 'dd/mm/yyyy',
-    language: 'pt-BR',
-});
-
-//Select2
-$('#select-lider-celula').select2({
-    maximumSelectionLength: 3,
-    allowClear: true,
-    language: "pt-BR"
-});
-
-$('#select-celula').select2();
-
-//Funcoes para Modal
-function cria_modal(title, content, button) {
-    var id = '#celula-modal';
-
-    //Chama o modal
-    $(id).modal({
-        backdrop: false
-    });
-
-    //Prenche o modal
-    $(id).on('shown.bs.modal', function() {
-        $('#celula-modal-title').text(title);
-        $('#celula-modal-content').text(content);
-        $('.modal-footer').html(button);
-    });
-
-    //Limpa modal
-    $(id).on('hidden.bs.modal', function() {
-        $('#celula-modal-title').text("");
-        $('#celula-modal-content').text("");
-        $('.modal-footer').empty();
-        $('#cep').tooltip('hide');
-        nameCelula = null;
-    });
-}
-
-//Funcoes CEP
-//Funcoes para cep
-$('#cep').tooltip({
-    trigger: 'manual'
-});
-
-//Funcao para limpar o formulário do cep
-function limpa_formulario_cep() {
-    $('#rua').val("");
-    $('#bairro').val("");
-    $('#cidade').val("");
-    $('#estado').val("");
-}
-
-//Quando campo cep perde o foco
-$('#cep').blur(function() {
-    //Cria váriavel com valor do cep somente com numeros
-    var cep = $(this).val().replace(/\D/g, '');
-
-    //Verifica se campo está vazio
-    if (cep != "") {
-
-        //Expressão regular para verificar se cep é válido
-        var validaCep = /^[0-9]{8}$/;
-
-        //Valida Cep
-        if (validaCep.test(cep)) {
-            //Preenche campos durante pesquisa do webservice
-            $('#rua').val("...");
-            $('#bairro').val("...");
-            $('#cidade').val("...");
-            $('#estado').val("...");
-
-
-            //Consulta webservice
-            $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
-
-                if (!("erro" in dados)) {
-                    //Atualiza os campos
-                    $('#rua').val(dados.logradouro);
-                    $('#bairro').val(dados.bairro);
-                    $('#cidade').val(dados.localidade);
-                    $('#estado').val(dados.uf);
-                } else {
-                    //Cep pesquisado não foi encontrado
-                    limpa_formulario_cep();
-                    $('#cep').tooltip('show');
-                }
-            });
-        } else {
-            //CEP não é válido
-            limpa_formulario_cep();
-        }
-    } else {
-        //Campo está vazio
-        limpa_formulario_cep();
-    }
-});
-
-$('#cep').click(function() {
-    $(this).tooltip('hide');
-});
-
 $('#anexar').click(function() {
     if ($(this).prop('checked')) {
         $('#fministracao').show();
@@ -164,8 +5,6 @@ $('#anexar').click(function() {
         $('#fministracao').hide();
     }
 });
-
-$('#fministracao').hide();
 
 //DataTable de células
 //Grid de Celulas
@@ -231,23 +70,6 @@ function editModal(modal) {
     }
 }
 
-function editarMinistracoes(idModal) {
-    let idMinistracao = $('#siscell-list tr.success > input').val();
-    if (idMinistracao != null) {
-
-    } else {
-        $('#form-celula-modal-title').text('Nova Ministração');
-    }
-
-    $(idModal).on('hidden.bs.modal', function() {
-        $('#form-celula').each(function () {
-            this.reset();
-        });
-        $('#idMinistracoes').val('');
-        $('#fministracao').hide();
-    });
-}
-
 function editarMembro(idModal) {
     let idMembro = $('#siscell-list tr.success > input').val();
     if (idMembro != null) {
@@ -293,6 +115,10 @@ function editarMembro(idModal) {
     }
 
     $(idModal).on('hidden.bs.modal', function() {
+        $('#form-celula').each(function () {
+            this.reset();
+        });
+        $('#idMembro').val('');
         $('#lider').prop('checked', false);
         $('#select-celula').val('').trigger('change');
     });
@@ -454,10 +280,6 @@ function criarMembro() {
     });
 }
 
-function criarMinistracao() {
-    let formData = new FormData(this)
-}
-
 //Formulário de celulas
 $('#form-celula').submit(function(event) {
     event.preventDefault();
@@ -467,24 +289,7 @@ $('#form-celula').submit(function(event) {
         criarMembro();
     } else if (event.target.idMinistracao !== undefined) {
         let formData = new FormData(this);
-
-        $.ajax({
-            url: '/siscell/ministracoes',
-            type: 'POST',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            xhr: function() {
-                var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload) {
-                    myXhr.upload.addEventListener('progress', function() {
-
-                    }, false);
-                }
-                return myXhr;
-            }
-        });
+        criarMinistracao(formData);        
     }
 
 });

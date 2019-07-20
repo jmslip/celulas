@@ -13,7 +13,9 @@ class Ministracoes extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'ministrationsxusers', 'id_ministration', 'id_user');
+        return $this->belongsToMany(User::class, UsuariosXMinistracoes::class, 'id_ministration', 'id_user')
+                    ->withTimestamps()
+                    ->withPivot('active', 'id_user_updated');
     }
 
     public function file() {
