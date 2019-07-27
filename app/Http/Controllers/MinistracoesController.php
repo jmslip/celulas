@@ -13,36 +13,32 @@ class MinistracoesController extends Controller
 {
     private $title = "Ministrações";
     private $view = "sidebar.ministracoes.ministracoes";
+    private $grid;
     private $isModalCEP = false;
 
-    public function index()
+    public function index($url = 'publicadas')
     {   
-        $ministracoes = $this->getAllMinistrations();
+        $this->setGrid($url);
+        if (strcmp($url, 'inativos') == 0) {
+            return $this->initialize($this->getMinistracoesInativas());
+        } else if (strcmp($url, 'lixeira') == 0) {
+            return $this->initialize($this->getMinistracoesExcluidas());
+        } else {
+            return $this->initialize($this->getMinistracoesAtivas());
+        }
+    }
+
+    private function initialize($data) {
         return view($this->view)->with([
             'title' => $this->title,
             'infosGrid' => $this->infosGrid(),
-            'dados' => $ministracoes,
+            'dados' => $data,
+            'grid' => $this->getGrid(),
             'isModalCEP'    => $this->isModalCEP,
             'usuarioLogado' => Auth::user()->name
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $ministracao = null;
@@ -57,6 +53,11 @@ class MinistracoesController extends Controller
                         foreach ($ministracao->getRelation('users') as $m) {
                             $userId = $m->getAttribute('id');
                         }
+
+                        if ($ministracao->getAttribute('attachment') == 0 && $request->input('anexar')) {
+                            $anexar = 1;
+                        }
+
                         $update = true;
                     } else {
                         $ministracao = new Ministracoes();
@@ -66,7 +67,7 @@ class MinistracoesController extends Controller
 
                     $ministracao->name = $request->input('nome');
                     $ministracao->description = $request->input('ministracao');
-                    if (!$update)
+                    if ($anexar == 1)
                         $ministracao->attachment = $anexar;
                     $ministracao->number = $request->input('numeroMinistracao');
                     $ministracao->save();
@@ -103,23 +104,24 @@ class MinistracoesController extends Controller
         if (!empty($id)) {
             try {
                 // $ministracao = Ministracoes::where('id', $id)->get();
-                $ministracao = Ministracoes::leftJoin('files', 'ministrations.id', '=', 'files.ministrations_id')
-                                                ->leftJoin('ministrationsxusers', 'ministrations.id', '=', 'ministrationsxusers.id_ministration')
-                                                ->leftJoin('users', 'ministrationsxusers.id_user', '=', 'users.id')
-                                                ->where('ministrations.id', $id)
-                                                ->get([
-                                                    'ministrations.*',
-                                                    'files.id as fileId',
-                                                    'files.name as fileName',
-                                                    'files.path',
-                                                    'files.type',
-                                                    'files.size',
-                                                    'users.id as idUser',
-                                                    'users.name as nameUser'
-                                                ]);
+//                $ministracao = Ministracoes::leftJoin('files', 'ministrations.id', '=', 'files.ministrations_id')
+//                                                ->leftJoin('ministrationsxusers', 'ministrations.id', '=', 'ministrationsxusers.id_ministration')
+//                                                ->leftJoin('users', 'ministrationsxusers.id_user', '=', 'users.id')
+//                                                ->where('ministrations.id', $id)
+//                                                ->get([
+//                                                    'ministrations.*',
+//                                                    'files.id as fileId',
+//                                                    'files.name as fileName',
+//                                                    'files.path',
+//                                                    'files.type',
+//                                                    'files.size',
+//                                                    'users.id as idUser',
+//                                                    'users.name as nameUser'
+//                                                ]);
+                $ministracao = Ministracoes::getMinistracao($id)->get();
 
                 if (!empty($ministracao)) {
-                    return json_encode($ministracao->toArray());
+                    return json_encode(($ministracao)->toArray());
                 }
             } catch (\Throwable $tr) {
                 return json_encode($tr);
@@ -153,10 +155,9 @@ class MinistracoesController extends Controller
                 $ministracao = Ministracoes::find($id);
                 if ($request->input('tipo') == 'fileDelete') {
                     $ministracao->attachment = 0;
-                    $this->deleteFile($ministracao);
                     $ministracao->save();
-                } else {
                     $this->deleteFile($ministracao);
+                } else {
                     $ministracao->delete();
                 }
                 DB::commit();
@@ -177,6 +178,24 @@ class MinistracoesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getMinistracoesAtivas() {
+        return Ministracoes::active()->get();
+    }
+
+    public function getMinistracoesInativas() {
+        return Ministracoes::inactive()->get();
+    }
+
+    public function getMinistracoesExcluidas() {
+        return Ministracoes::trash()->get();
+    }
+
+    public function getQuantidadeMinistracoes() {
+        $ministracoes = Ministracoes::count();
+
+        return json_encode($ministracoes);
     }
 
     private function infosGrid() {
@@ -202,5 +221,13 @@ class MinistracoesController extends Controller
     private function deleteFile($ministracao) {
         $filesController = new FilesController();
         $filesController->apagaArquivo($ministracao->id);
+    }
+
+    public function getGrid() {
+        return $this->grid;
+    }
+
+    private function setGrid($grid) {
+        $this->grid = $grid;
     }
 }

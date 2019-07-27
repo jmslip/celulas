@@ -32,6 +32,21 @@ const tableSiscell = $('#siscell-list').DataTable({
 var valueTable = null;
 var nameTable = null;
 
+function defineValorBtn(tipo) {
+    let url = window.location.pathname;
+    let url_arr = url.split('/');
+    url = url_arr[url_arr.length - 1];
+    if (url === 'lixeira') {
+        return 'Restaurar';
+    } else if (url === 'inativos') {
+        return 'Publicar';
+    } else if (tipo === 2){
+        return 'Editar';
+    } else if (tipo === 1) {
+        return 'Novo';
+    }
+}
+
 
 $('#siscell-list tbody').on('click', 'tr', function() {
     let id = $('#siscell-list tr > input').val();
@@ -39,14 +54,18 @@ $('#siscell-list tbody').on('click', 'tr', function() {
     if (id !== undefined) {
         if ($(this).hasClass('success')) {
             $(this).removeClass('success');
-            $('.siscell-edit').text('Novo');
+            let btnText = defineValorBtn(1);
+            $('.siscell-edit').text(btnText);
+            $('.siscell-ministracao').prop('disabled', true);
             $('.siscell-delete').prop('disabled', true);
             valueTable = null;
             nameTable = null;
         } else {
+            let btnText = defineValorBtn(2);
             tableSiscell.$('tr.success').removeClass('success');
             $(this).addClass('success');
-            $('.siscell-edit').text('Editar');
+            $('.siscell-edit').text(btnText);
+            $('.siscell-ministracao').removeAttr('disabled');
             $('.siscell-delete').removeAttr('disabled');
             valueTable = $('#siscell-list tr.success > input').val();
             nameTable = $('#siscell-list tr.success > #'+valueTable).text();
@@ -220,7 +239,7 @@ function apagarItem(url) {
         }
     })
     .fail(function() {
-        console.log('Item não encontrada');
+        console.log('Item não encontrado');
     });
 }
 

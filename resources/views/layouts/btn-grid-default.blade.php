@@ -1,0 +1,2 @@
+<button type="button" id="edit" class="btn btn-lg btn-default siscell-edit" onclick="editModal('{{ $infosGrid['fnEditar'] }}')">Novo</button>
+<button type="button" id="delete" class="btn btn-lg btn-danger siscell-delete" disabled onclick="confirmaExlusao('{{ $infosGrid['url'] }}')">Apagar</button>

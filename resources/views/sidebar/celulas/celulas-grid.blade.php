@@ -17,3 +17,6 @@
           </tr>
       @endforeach
 @endsection
+@section('siscell-btn-grid')
+    @include('layouts/btn-grid-default')
+@endsection

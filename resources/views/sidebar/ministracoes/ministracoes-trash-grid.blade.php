@@ -14,5 +14,6 @@
     @endforeach
 @endsection
 @section('siscell-btn-grid')
-    @include('layouts/btn-grid-default')
+    <button type="button" id="restaurar" class="btn btn-lg btn-default siscell-ministracao" disabled onclick="confirmaRestauracao('{{ $ministracao->number }}')">Restaurar</button>
+    <button type="button" id="delete" class="btn btn-lg btn-danger siscell-delete" disabled onclick="confirmaExlusao('{{ $infosGrid['url'] }}')">Apagar</button>
 @endsection

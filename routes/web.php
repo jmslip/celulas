@@ -14,6 +14,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'siscell'], function () {
     Route::get('qtMembros', 'PessoasController@getQuantidadeMembros');
     //Rotas para ministrações
     Route::resource('/ministracoes', 'MinistracoesController');
+    Route::get('/ministracoes-nao-publicadas/{url?}', 'MinistracoesController@index');
 
     //Rotas para Files
     Route::get('/download/{tipo}/{file}', 'FilesController@downloadFile');

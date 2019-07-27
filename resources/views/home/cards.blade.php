@@ -34,7 +34,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3 id="qtMinistracoes">0</h3>
+                <h3>{{ $qtMinistracoes }}</h3>
 
                 <p>Ministrações</p>
             </div>

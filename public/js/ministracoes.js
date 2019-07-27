@@ -10,7 +10,7 @@ function editarMinistracoes(idModal) {
             if (data !== null || data !== undefined) {
                 $('#idMinistracao').val(data[0].id);
                 $('#numeroMinistracao').val(data[0].number);
-                $('#nome').val(data[0].number+'.'+data[0].name);
+                $('#nome').val(data[0].name);
                 $('#ministracao').val(data[0].description);
                 $('#usuarioMinistracao').val(data[0].nameUser);
                 if (data[0].attachment == 1) {
@@ -99,4 +99,25 @@ function apagaArquivo() {
             alert('Erro ao apagar o arquivo! '+ textStatus);
         });
     }
+}
+
+function confirmaRestauracao(item) {
+    let idMinistracao = $('#siscell-list tr.success > input').val();
+    if (idMinistracao != null) {
+        let title = "RESTAURAR";
+        let content = "ATENÇÃO!!! Confirma restauração da ministração "+ item + "? ";
+        let buttons = "<button type='button' class='btn btn-success confirma-restauracao' data-dismiss='modal' onClick='restaurar(\""+idMinistracao+"\")'>Confirma</button>\
+            <button class='btn btn-danger confirma-restauracao' data-dismiss='modal' value='cancela'>Cancela</button>";
+
+        cria_modal(title, content, buttons);
+    }
+}
+
+function restaurar(idMinistracao) {
+    $.ajax({
+        url: '/siscell/ministracoes/' + idMinistracao,
+        type: 'PUT',
+        context: this,
+        data:    
+    });
 }

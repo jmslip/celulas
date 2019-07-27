@@ -126,8 +126,24 @@ return [
         ],
         [
             'text'  => 'Ministrações',
-            'url'   => 'siscell/ministracoes',
-            'icon'  => 'book'
+            'icon'  => 'book',
+            'submenu' => [
+                [
+                    'text' => 'Publicadas',
+                    'url'   => 'siscell/ministracoes',
+                    'icon' => 'folder-open'
+                ],
+                [
+                    'text' => 'Não publicadas',
+                    'url' => 'siscell/ministracoes-nao-publicadas/inativos',
+                    'icon' => 'edit'
+                ],
+                [
+                    'text' => 'Lixeira',
+                    'url' => 'siscell/ministracoes-nao-publicadas/lixeira',
+                    'icon' => 'trash'
+                ]
+            ]
         ]
     ],
 
